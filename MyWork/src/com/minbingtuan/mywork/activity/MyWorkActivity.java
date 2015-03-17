@@ -64,6 +64,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mywork);
 		myApp = (MyApplication) getApplication();
+		//发送Http请求，从服务器获取签到数据
 		HttpGetSearchRecord();
 
 		RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.layoutTitle);

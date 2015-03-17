@@ -77,6 +77,9 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 		super.onDestroy();
 	}
 
+	/**
+	 * 调用程序的返回键
+	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -91,7 +94,7 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.ButtonGroup:
+		case R.id.ButtonGroup://点击部门文本框
 			if (!myApp.isConnect()) {
 				Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
 				return;
@@ -100,44 +103,53 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 			intent.putExtra("groupIndex", groupIndex);
 			startActivityForResult(intent, 1);
 			break;
-		case R.id.buttonregister:
+		case R.id.buttonregister://点击注册按钮
 			name = EditTextName.getText().toString().trim();
 			tel = EditTextTel.getText().toString().trim();
 			password = EditTextPassWord.getText().toString().trim();
 			confirmPassWord = EditTextConfirmPassWord.getText().toString().trim();
 			eMail = EditTextemail.getText().toString().trim();
+			//判断用户名和密码是否为空
 			if (TextUtils.isEmpty(name) || (TextUtils.isEmpty(tel)) || (TextUtils.isEmpty(password))
 					|| (TextUtils.isEmpty(eMail))) {
 				Toast.makeText(getApplicationContext(), getString(R.string.input_register_info), Toast.LENGTH_SHORT)
 						.show();
 				return;
 			}
+			//判断密码是否超出位数限制
 			if (password.length() < 6 || password.length() > 20) {
 				Toast.makeText(getApplicationContext(), getString(R.string.PassWordLengthShouldBe6to20),
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
+			//判断两次密码输入是否一致
 			if (!password.equals(confirmPassWord)) {
 				Toast.makeText(getApplicationContext(), getString(R.string.Two_passwords_do_not_match),
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
 
+			//判断手机号是否符合正则表达式
 			if (!StringUtils.isTel(tel)) {
 				Toast.makeText(getApplicationContext(), getString(R.string.Please_enter_the_correct_phone_number),
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
+			//判断邮箱是否符合正则表达式
 			if (!StringUtils.isEmail(eMail)) {
 				Toast.makeText(getApplicationContext(), getString(R.string.Email_format_error), Toast.LENGTH_SHORT)
 						.show();
 				return;
 			}
+			//判断网络是否连接
 			if (!myApp.isConnect()) {
 				Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
 				return;
 			}
 
+			/**
+			 * 发送注册的Http请求
+			 */
 			RequestQueue queue = Volley.newRequestQueue(this);
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("userName", name);

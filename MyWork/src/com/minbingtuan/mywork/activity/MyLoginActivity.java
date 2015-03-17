@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,6 +45,9 @@ public class MyLoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		myApp = (MyApplication) getApplication();
 
+		/**
+		 * 判断用户上一次是否退出登录
+		 */
 		if (MyApplication.getLoginStatus()) {
 			Intent intent = new Intent();
 			intent.setClass(MyLoginActivity.this, MyWorkActivity.class);
@@ -62,22 +66,29 @@ public class MyLoginActivity extends Activity {
 			public void onClick(View arg0) {
 				mUserName = mEditTextUserName.getText().toString();
 				mPassWord = mEditTextUserPassWord.getText().toString();
+				//判断用户名或者密码是否为空
 				if (TextUtils.isEmpty(mUserName) || TextUtils.isEmpty(mPassWord)) {
 					Toast.makeText(getApplicationContext(), getString(R.string.Please_enter_the_UserName_to_log_on),
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
+				//判断是否连续点击
 				if (Utils.isFastDoubleClick()) {  
 			        return;  
 			    }
+				//判断是否有连接网络
 				if (!myApp.isConnect()) {
 					Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
 					return;
 				}
+				//发送Http请求
 				HttpGetRequestLogin(mUserName, mPassWord);
 			}
 		});
 
+		/**
+		 * 点击注册按钮发生事件
+		 */
 		buttonRegister = (Button) findViewById(R.id.buttonRegister);
 		buttonRegister.setOnClickListener(new OnClickListener() {
 
@@ -91,6 +102,11 @@ public class MyLoginActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Http请求的处理方法
+	 * @param mUserName
+	 * @param mPassWord
+	 */
 	public void HttpGetRequestLogin(String mUserName, String mPassWord) {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -104,6 +120,7 @@ public class MyLoginActivity extends Activity {
 
 					@Override
 					public void onResponse(JSONObject response) {
+						Log.i("***Json String", response+"");
 						int status = response.optInt("status");
 						if (status == 0) {
 							JSONObject jobj = response.optJSONObject("userInfo");
@@ -150,11 +167,16 @@ public class MyLoginActivity extends Activity {
 				});
 		queue.add(jsObjectRequest);
 	}
+	/**
+	 * 判断是否在限定时间内重复点击
+	 * @author wching
+	 *
+	 */
 	static class Utils {  
 	    public static long lastClickTime;  
 	    public static boolean isFastDoubleClick() {  
 	        long time = System.currentTimeMillis();     
-	        if ( time - lastClickTime < 20000) {     
+	        if ( time - lastClickTime < 2000) {     
 	            return true;     
 	        }     
 	        lastClickTime = time;     
