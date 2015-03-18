@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/loginbackground"
+    android:clickable="true" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/loginbackground" >
+
+        <Button
+            android:id="@+id/buttonregister"
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:layout_alignLeft="@+id/relativeLayoutUserName"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/relativeLayoutUserName"
+            android:layout_marginBottom="42dp"
+            android:background="@color/buttonTextBlue"
+            android:text="@string/registration"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutUserName"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="50dp"
+            android:background="@color/white"
+            android:textColor="@color/buttonTextDefault" >
+
+            <EditText
+                android:id="@+id/editTextusername"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="11dp"
+                android:background="@null"
+                android:ems="10"
+                android:hint="@string/username"
+                android:textColor="@color/buttonTextDefault"
+                android:textColorHint="@color/buttonTextHint" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutPassWord"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@+id/relativeLayoutUserName"
+            android:layout_alignRight="@+id/relativeLayoutUserName"
+            android:layout_below="@+id/relativeLayoutUserName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:textColor="@color/buttonTextDefault" >
+
+            <EditText
+                android:id="@+id/editTextuserpassword"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="11dp"
+                android:background="@null"
+                android:ems="16"
+                android:hint="@string/EnterPassWordLengthShouldBe6to20"
+                android:inputType="textPassword"
+                android:textColor="@color/buttonTextDefault"
+                android:textColorHint="@color/buttonTextHint" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutConfirmPassWord"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@+id/relativeLayoutUserName"
+            android:layout_alignRight="@+id/relativeLayoutUserName"
+            android:layout_below="@+id/relativeLayoutPassWord"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:textColor="@color/buttonTextDefault" >
+
+            <EditText
+                android:id="@+id/editTextConfirmPassWord"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="11dp"
+                android:background="@null"
+                android:ems="16"
+                android:hint="@string/confirmpassword"
+                android:inputType="textPassword"
+                android:textColor="@color/buttonTextDefault"
+                android:textColorHint="@color/buttonTextHint" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutGroup"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/relativeLayoutConfirmPassWord"
+            android:layout_alignLeft="@+id/relativeLayoutUserName"
+            android:layout_alignRight="@+id/relativeLayoutUserName"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:textColor="@color/buttonTextDefault" >
+
+            <Button
+                android:id="@+id/ButtonGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="11dp"
+                android:background="@null"
+                android:ems="10"
+                android:gravity="left|center_vertical"
+                android:hint="@string/group"
+                android:textColor="@color/buttonTextDefault"
+                android:textColorHint="@color/buttonTextHint"
+                android:textSize="18sp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/relativeLayoutTel"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@+id/relativeLayoutUserName"
+            android:layout_alignRight="@+id/relativeLayoutUserName"
+            android:layout_below="@+id/relativeLayoutGroup"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:textColor="@color/buttonTextDefault" >
+
+            <EditText
+                android:id="@+id/editTextTel"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="11dp"
+                android:background="@null"
+                android:ems="16"
+                android:hint="@string/phoneNumber"
+                android:inputType="phone"
+                android:textColor="@color/buttonTextDefault"
+                android:textColorHint="@color/buttonTextHint" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/relativeLayouteEmail"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@+id/relativeLayoutUserName"
+            android:layout_alignRight="@+id/relativeLayoutUserName"
+            android:layout_below="@+id/relativeLayoutTel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:textColor="@color/buttonTextDefault" >
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="11dp"
+                android:background="@null"
+                android:ems="16"
+                android:hint="@string/Email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/buttonTextDefault"
+                android:textColorHint="@color/buttonTextHint" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
