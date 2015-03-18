@@ -1,5 +1,7 @@
 package com.minbingtuan.mywork;
 
+import com.minbingtuan.mywork.utils.StringUtils;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -127,6 +129,8 @@ public class MyApplication extends Application {
 		myUserInfo.groupId = groupId;
 		myUserInfo.birthday = birthday;
 		myUserInfo.groupName = groupName;
+		
+		
 	}
 
 	public int getUserId() {

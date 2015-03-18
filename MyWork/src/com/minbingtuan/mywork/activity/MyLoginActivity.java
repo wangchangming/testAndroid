@@ -1,7 +1,9 @@
 package com.minbingtuan.mywork.activity;
 
 import java.util.HashMap;
+
 import org.json.JSONObject;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -12,6 +14,7 @@ import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ public class MyLoginActivity extends Activity {
 
 	private Button buttonLogin = null;
 	private Button buttonRegister = null;
+	private CheckBox checkBox = null;
 	private EditText mEditTextUserName = null;
 	private EditText mEditTextUserPassWord = null;
 	private String mUserName;
@@ -41,7 +46,7 @@ public class MyLoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_userlogin);
 		myApp = (MyApplication) getApplication();
 
 		if (MyApplication.getLoginStatus()) {
@@ -55,6 +60,15 @@ public class MyLoginActivity extends Activity {
 		mEditTextUserPassWord = (EditText) findViewById(R.id.EditTextUserPassWord);
 		buttonLogin = (Button) findViewById(R.id.buttonLogin);
 		buttonRegister = (Button) findViewById(R.id.buttonRegister);
+		checkBox = (CheckBox) findViewById(R.id.check);
+		
+		
+		//如果用户名已经保存
+		if(!"".equals(StringUtils.userName)){
+			mEditTextUserName.setText(StringUtils.userName);
+			mEditTextUserPassWord.setText(StringUtils.password);
+		}
+		
 
 		buttonLogin.setOnClickListener(new OnClickListener() {
 
@@ -121,6 +135,13 @@ public class MyLoginActivity extends Activity {
 							myApp.startGPSService();
 							myApp.setLoginStatus(true);
 
+							if(checkBox.isChecked()){
+								StringUtils.userName = userName;
+								StringUtils.password = pwd; 
+							}else{
+								StringUtils.userName = "";
+								StringUtils.password = "";
+							}
 							Toast.makeText(getApplicationContext(), getString(R.string.Login_successful),
 									Toast.LENGTH_SHORT).show();
 							Intent intent = new Intent();
@@ -150,11 +171,16 @@ public class MyLoginActivity extends Activity {
 				});
 		queue.add(jsObjectRequest);
 	}
+	/**
+	 * 
+	 * @author wching
+	 *
+	 */
 	static class Utils {  
 	    public static long lastClickTime;  
 	    public static boolean isFastDoubleClick() {  
 	        long time = System.currentTimeMillis();     
-	        if ( time - lastClickTime < 20000) {     
+	        if ( time - lastClickTime < 2000) {     
 	            return true;     
 	        }     
 	        lastClickTime = time;     

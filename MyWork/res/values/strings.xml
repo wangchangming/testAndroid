@@ -48,6 +48,7 @@
     <string name="NetError">网络错误，请检查网络</string>
     <string name="Registration_Success">签到成功</string>
     <string name="Registration_Failed">签到失败</string>
+    <string name="SaveUserPassword">保存用户名和密码</string>
 
     <!-- 退出 -->
     <string name="Sure_you_want_to_quit">确定要退出吗?</string>

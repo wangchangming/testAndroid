@@ -55,7 +55,7 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 		mySavedInstanceState = savedInstanceState;
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_register);
 		myApp = (MyApplication) getApplication();
 

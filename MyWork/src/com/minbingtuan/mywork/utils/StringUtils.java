@@ -20,6 +20,9 @@ import android.text.TextUtils;
 
 public class StringUtils {
 	
+	public static String userName = "";
+	public static String password = "";
+	
 	/**
 	 * 
 	 * @param cTime
