@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.CalendarAdapter;
+import com.minbingtuan.mywork.utils.DateUtils;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -34,6 +35,8 @@ public class SearchActivity extends Activity implements OnGestureListener {
     private String ruzhuTime;  
     private String lidianTime;  
     private String state="";  
+    
+    TextView curDate;
 	
 	public SearchActivity() {  
 		  
@@ -71,6 +74,8 @@ public class SearchActivity extends Activity implements OnGestureListener {
           
 		
         gridView = (GridView) findViewById(R.id.gridview);
+        curDate = (TextView) findViewById(R.id.curDate);
+        curDate.setText(DateUtils.getMonth());
 		
 	}
 

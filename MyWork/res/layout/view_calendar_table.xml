@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content">
 
+    <RelativeLayout
+        android:id="@+id/layoutTitles"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true" >
+
+        <include
+            android:id="@+id/actionBarTitle"
+            layout="@layout/activity_titles" />
+    </RelativeLayout>
+    <TextView 
+        android:id="@+id/textNum"
+        android:paddingTop="20dp"
+        android:layout_below="@id/layoutTitles"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/RegisterInfoStatistics"
+        android:textSize="18sp"
+        android:gravity="center"/>
     <LinearLayout 
+        android:id="@+id/linear2"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_below="@id/textNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView 
+            android:id="@+id/curDate"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:onClick="onClick"/>
+    </LinearLayout>
+    <LinearLayout 
+        android:id="@+id/linear"
+        android:layout_below="@id/linear2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -70,13 +106,26 @@
     </LinearLayout>
     <GridView 
         android:id="@+id/gridview"
+        android:layout_below="@id/linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numColumns="7"
+        android:verticalSpacing="10dp" 
+        android:horizontalSpacing="1dp"
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:scrollbars="none"
         android:clickable="true"
         android:clipChildren="true"/>
+    <RelativeLayout
+        android:id="@+id/layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true" >
+
+        <include
+            android:id="@+id/title"
+            layout="@layout/activity_title" />
+    </RelativeLayout>
     
-</LinearLayout>
+</RelativeLayout>

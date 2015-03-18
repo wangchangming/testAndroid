@@ -25,5 +25,11 @@ public class DateUtils {
 		String str = formatter.format(curDate);
 		return str;
 	}
+	public static String getMonth() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM");
+		Date curDate = new Date(System.currentTimeMillis());
+		String str = formatter.format(curDate);
+		return str;
+	}
 
 }

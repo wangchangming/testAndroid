@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 /**
  * 日历gridview中的每一个item显示的textview
- * @author lmw
+ * @author wching
  *
  */
 public class CalendarAdapter extends BaseAdapter {
@@ -33,7 +33,7 @@ public class CalendarAdapter extends BaseAdapter {
 	private Context context;
 	private String[] dayNumber;  //一个gridview中的日期存入此数组中
 	private SpecialCalendar sc = null;
-	private LunarCalendar lc = null; 
+	private LunarCalendar lc = null; //农历显示
 	private Resources res = null;
 	private Drawable drawable = null;
 	
@@ -139,12 +139,15 @@ public class CalendarAdapter extends BaseAdapter {
 		String d = dayNumber[position].split("\\.")[0];
 		String dv = dayNumber[position].split("\\.")[1];
 
-		SpannableString sp = new SpannableString(d+"\n"+dv);
+//		SpannableString sp = new SpannableString(d+"\n"+dv);//
+//		sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//		sp.setSpan(new RelativeSizeSpan(1.2f) , 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//		if(dv != null ||dv != ""){
+//            sp.setSpan(new RelativeSizeSpan(0.75f), d.length()+1, dayNumber[position].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//		}
+		SpannableString sp = new SpannableString(d);
 		sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		sp.setSpan(new RelativeSizeSpan(1.2f) , 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		if(dv != null ||dv != ""){
-            sp.setSpan(new RelativeSizeSpan(0.75f), d.length()+1, dayNumber[position].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
 		textView.setText(sp);
 		textView.setTextColor(Color.GRAY);
 		
@@ -165,8 +168,7 @@ public class CalendarAdapter extends BaseAdapter {
 		if(currentFlag == position){ 
 			//设置当天的背景
 			drawable = res.getDrawable(R.drawable.current_day_bgc);
-			textView.setBackgroundDrawable(drawable);
-			textView.setTextColor(Color.WHITE);
+			textView.setTextColor(Color.RED);
 		}
 		return convertView;
 	}
