@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -138,6 +139,8 @@ public class MyLoginActivity extends Activity {
 							if(checkBox.isChecked()){
 								StringUtils.userName = userName;
 								StringUtils.password = pwd; 
+								System.out.println(">>>>>>>>>>>>"+StringUtils.userName+"????"+StringUtils.password);
+								Log.i("name_password", userName+"--"+pwd);
 							}else{
 								StringUtils.userName = "";
 								StringUtils.password = "";

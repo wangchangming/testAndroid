@@ -117,5 +117,15 @@
     <string name="generic_error">未知错误</string>
     <string name="Setting_name">未设置姓名</string>
     <string name="Setting_birthday">未设置出生日期</string>
+    
+    <!-- 星期 -->
+    <string name="sun">日</string>
+    <string name="mon">一</string>
+    <string name="tues">二</string>
+    <string name="wed">三</string>
+    <string name="thus">四</string>
+    <string name="fri">五</string>
+    <string name="sat">六</string>
+    
 
 </resources>

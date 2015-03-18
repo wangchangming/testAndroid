@@ -155,7 +155,7 @@ public class MySearchActivity extends Activity implements OnClickListener, View.
 			finish();
 			break;
 		case R.id.buttonSetting:
-			intent = new Intent(MySearchActivity.this, MySettingActivity.class);
+			intent = new Intent(MySearchActivity.this, SearchActivity.class);
 			startActivity(intent);
 			finish();
 			break;

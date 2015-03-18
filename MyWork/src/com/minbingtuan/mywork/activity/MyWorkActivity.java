@@ -215,7 +215,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.buttonSearch:
-			intent = new Intent(MyWorkActivity.this, MySearchActivity.class);
+			intent = new Intent(MyWorkActivity.this, SearchActivity.class);
 			startActivity(intent);
 			finish();
 			break;
