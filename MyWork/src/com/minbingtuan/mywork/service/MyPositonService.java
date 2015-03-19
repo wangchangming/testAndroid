@@ -26,6 +26,11 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * 启动系统位置服务
+ * @author wching
+ *
+ */
 public class MyPositonService extends Service {
 	private final static String TAG = "positonService";
 
@@ -111,6 +116,9 @@ public class MyPositonService extends Service {
 		queue.add(jsObjectRequest);
 	}
 
+	/**
+	 * 创建一个广播
+	 */
 	private BroadcastReceiver myGPSBroadcastReceiver = new BroadcastReceiver() {
 
 		@Override

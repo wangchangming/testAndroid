@@ -1,6 +1,7 @@
 package com.minbingtuan.mywork.activity;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.minbingtuan.mywork.R;
@@ -8,17 +9,32 @@ import com.minbingtuan.mywork.utils.CalendarAdapter;
 import com.minbingtuan.mywork.utils.DateUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker;
 import android.widget.GridView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-public class SearchActivity extends Activity implements OnGestureListener {
+import android.widget.Toast;
+public class SearchActivity extends Activity implements OnGestureListener,OnClickListener {
 
 	private GestureDetector gestureDetector = null;  
     private CalendarAdapter calV = null;  
@@ -26,17 +42,21 @@ public class SearchActivity extends Activity implements OnGestureListener {
     private TextView topText = null;  
     private static int jumpMonth = 0;      //每次滑动，增加或减去一个月,默认为0（即显示当前月）  
     private static int jumpYear = 0;       //滑动跨越一年，则增加或者减去一年,默认为0(即当前年)  
-    private int year_c = 0;  
-    private int month_c = 0;  
-    private int day_c = 0;  
+    private int year_c = 0;  //当前年份
+    private int month_c = 0;  //当前月份
+    private int day_c = 0;  //当前日期
     private String currentDate = "";  
     private Bundle bd=null;//发送参数  
     private Bundle bun=null;//接收参数  
     private String ruzhuTime;  
     private String lidianTime;  
     private String state="";  
-    
-    TextView curDate;
+    private Intent intent;
+    private RadioButton buttonWork;
+	private RadioButton buttonSetting;
+	private RadioGroup mRadioGroup;
+	private int curCheckId = R.id.buttonSearch;
+	private TextView curDate;
 	
 	public SearchActivity() {  
 		  
@@ -71,12 +91,26 @@ public class SearchActivity extends Activity implements OnGestureListener {
         calV = new CalendarAdapter(this,getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);  
         addGridView();  
         gridView.setAdapter(calV);  
-          
+        
+        //初始化界面
+		init();
+        
 		
-        gridView = (GridView) findViewById(R.id.gridview);
+	}
+	public void init(){
+		gridView = (GridView) findViewById(R.id.gridview);
+		buttonWork = (RadioButton) findViewById(R.id.buttonWork);
+		buttonSetting = (RadioButton) findViewById(R.id.buttonSetting);
+		mRadioGroup = (RadioGroup) findViewById(R.id.main_radio);
         curDate = (TextView) findViewById(R.id.curDate);
         curDate.setText(DateUtils.getMonth());
-		
+        buttonWork.setOnClickListener(this);
+        buttonSetting.setOnClickListener(this);
+        curDate.setOnClickListener(this);
+        //将当前选项设置为选中状态
+        mRadioGroup.check(curCheckId);
+        //隐藏系统软键盘
+        curDate.setInputType(InputType.TYPE_NULL);
 	}
 
 	@Override
@@ -135,6 +169,28 @@ public class SearchActivity extends Activity implements OnGestureListener {
             
         });  
     }
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.buttonWork:
+			intent = new Intent(SearchActivity.this, MyWorkActivity.class);
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.buttonSetting:
+			intent = new Intent(SearchActivity.this, MySettingActivity.class);
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.curDate://点击弹出日期选择框
+			calV = new CalendarAdapter(this,getResources(),jumpMonth,jumpYear,2015,5,5); 
+			calV.notifyDataSetChanged();
+			gridView.setAdapter(calV); 
+			break;
+		default:
+			break;
+		}
+	}
 
 
 }

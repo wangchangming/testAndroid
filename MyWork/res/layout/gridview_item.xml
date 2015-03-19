@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout1"
-    android:layout_width="50dp"
-    android:layout_height="50dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/am"
@@ -15,12 +15,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:background="@null" />
 
     <ImageView
         android:id="@+id/pm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/mark4"/>
+    <View 
+        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:background="@color/black"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="13dp"/>
+    <View 
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

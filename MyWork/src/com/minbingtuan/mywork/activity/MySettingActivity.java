@@ -433,7 +433,7 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.buttonSearch:
-			intent = new Intent(MySettingActivity.this, MySearchActivity.class);
+			intent = new Intent(MySettingActivity.this, SearchActivity.class);
 			startActivity(intent);
 			finish();
 			break;

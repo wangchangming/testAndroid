@@ -23,17 +23,17 @@ public class MyWorkDataDB extends SQLiteOpenHelper {
 	public final static String PERSON_TEL = "person_tel";
 	public final static String PERSON_GROUP = "person_group";
 
-	public final static String CARD_TABLE = "card_table"; // �򿪱����
-	public final static String CARD_ID = "card_id";// ��ID
-	public final static String CARD_TIME_ID = "card_time_id";// ���˵�id����Ӧperson_table�е�person_id
-	public final static String CARD_TIME_YEAR = "card_time_year";// �򿪵�ʱ��
+	public final static String CARD_TABLE = "card_table"; 
+	public final static String CARD_ID = "card_id";
+	public final static String CARD_TIME_ID = "card_time_id";
+	public final static String CARD_TIME_YEAR = "card_time_year";
 	public final static String CARD_TIME_MONTH = "card_time_month";
 	public final static String CARD_TIME_DAY = "card_time_day";
 	public final static String CARD_TIME_HOUR = "card_time_hour";
 	public final static String CARD_TIME_MINUTE = "card_time_minute";
 	public final static String CARD_TIME_TIME = "card_time_time";// save
 																	// year-month-day-mm-hh
-	public final static String CARD_TIME_TYPE = "card_time_type";// �����ͣ��ϰ࣬�°�
+	public final static String CARD_TIME_TYPE = "card_time_type";
 	
 	enum CardTimeType{
 		CARD_TIME_ON_DURTY,//�ϰ�

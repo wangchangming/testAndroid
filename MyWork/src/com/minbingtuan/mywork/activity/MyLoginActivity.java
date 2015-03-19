@@ -17,6 +17,7 @@ import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class MyLoginActivity extends Activity {
 	private String mPassWord;
 
 	private MyApplication myApp;
+	
 
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class MyLoginActivity extends Activity {
 				finish();
 			}
 		});
+		
 	}
 
 	public void HttpGetRequestLogin(String mUserName, String mPassWord) {

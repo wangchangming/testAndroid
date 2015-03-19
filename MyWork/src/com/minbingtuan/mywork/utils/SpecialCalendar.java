@@ -3,7 +3,8 @@ package com.minbingtuan.mywork.utils;
 import java.util.Calendar;
 
 /**
- * 
+ * 功能：用于实现某年是否为闰年及当月的天数
+ * 还有判断某月的第一天是星期几
  * @author wching
  *
  */

@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -65,6 +66,16 @@ public class CalendarAdapter extends BaseAdapter {
 		
 	}
 	
+	/**
+	 * 功能：用于计算出最终显示的某年某月的日历
+	 * @param context
+	 * @param rs  资源
+	 * @param jumpMonth 每次滑动，增加或减去一个月,默认为0（即显示当前月）
+	 * @param jumpYear  滑动跨越一年，则增加或者减去一年,默认为0(即当前年)
+	 * @param year_c    当前年份
+	 * @param month_c   当前月份
+	 * @param day_c     当前日期
+	 */
 	public CalendarAdapter(Context context,Resources rs,int jumpMonth,int jumpYear,int year_c,int month_c,int day_c){
 		this();
 		this.context= context;
@@ -72,28 +83,33 @@ public class CalendarAdapter extends BaseAdapter {
 		lc = new LunarCalendar();
 		this.res = rs;
 		
-		int stepYear = year_c+jumpYear;
-		int stepMonth = month_c+jumpMonth ;
-		if(stepMonth > 0){
-			//往下一个月滑动
-			if(stepMonth%12 == 0){
-				stepYear = year_c + stepMonth/12 -1;
-				stepMonth = 12;
-			}else{
-				stepYear = year_c + stepMonth/12;
-				stepMonth = stepMonth%12;
-			}
-		}else{
-			//往上一个月滑动
-			stepYear = year_c - 1 + stepMonth/12;
-			stepMonth = stepMonth%12 + 12;
-			if(stepMonth%12 == 0){
-				
-			}
-		}
+		/**
+		 * 以下是滑动判断，暂时不用需要，先隐藏
+		 */
+//		//需要显示的年份
+//		int stepYear = year_c+jumpYear;  
+//		//需要显示的月份
+//		int stepMonth = month_c+jumpMonth ;
+//		if(stepMonth > 0){
+//			//往下一个月滑动
+//			if(stepMonth%12 == 0){//如果下一月是12月，则显示当年的的12月日历
+//				stepYear = year_c + stepMonth/12 -1;
+//				stepMonth = 12;
+//			}else{
+//				stepYear = year_c + stepMonth/12;
+//				stepMonth = stepMonth%12;
+//			}
+//		}else{
+//			//往上一个月滑动
+//			stepYear = year_c - 1 + stepMonth/12;
+//			stepMonth = stepMonth%12 + 12;
+//			if(stepMonth%12 == 0){
+//				
+//			}
+//		}
 	
-		currentYear = String.valueOf(stepYear);;  //得到当前的年份
-		currentMonth = String.valueOf(stepMonth);  //得到本月 （jumpMonth为滑动的次数，每滑动一次就增加一月或减一月）
+		currentYear = String.valueOf(year_c);;  //得到当前的年份
+		currentMonth = String.valueOf(month_c);  //得到本月 （jumpMonth为滑动的次数，每滑动一次就增加一月或减一月）
 		currentDay = String.valueOf(day_c);  //得到当前日期是哪天
 		
 		getCalendar(Integer.parseInt(currentYear),Integer.parseInt(currentMonth));
@@ -136,6 +152,7 @@ public class CalendarAdapter extends BaseAdapter {
 			convertView = LayoutInflater.from(context).inflate(R.layout.gridview_item, null);
 		 }
 		TextView textView = (TextView) convertView.findViewById(R.id.text);
+		RelativeLayout rt = (RelativeLayout) convertView.findViewById(R.id.RelativeLayout1);
 		String d = dayNumber[position].split("\\.")[0];
 		String dv = dayNumber[position].split("\\.")[1];
 
@@ -156,6 +173,8 @@ public class CalendarAdapter extends BaseAdapter {
 			textView.setTextColor(Color.BLACK);// 当月字体设黑
 			drawable = res.getDrawable(R.drawable.current_day_bgc);
 
+		}else{//如果不是本月的，就直接隐藏
+			rt.setVisibility(View.GONE);
 		}
 		if(schDateTagFlag != null && schDateTagFlag.length >0){
 			for(int i = 0; i < schDateTagFlag.length; i++){
@@ -173,18 +192,27 @@ public class CalendarAdapter extends BaseAdapter {
 		return convertView;
 	}
 	
-	//得到某年的某月的天数且这月的第一天是星期几
+	/**
+	 * 得到某年的某月的天数且这月的第一天是星期几
+	 * @param year
+	 * @param month
+	 */
 	public void getCalendar(int year, int month){
 		isLeapyear = sc.isLeapYear(year);              //是否为闰年
 		daysOfMonth = sc.getDaysOfMonth(isLeapyear, month);  //某月的总天数
-		dayNumber = new String[daysOfMonth];
 		dayOfWeek = sc.getWeekdayOfMonth(year, month);      //某月第一天为星期几
+		//创建日历数组
+		dayNumber = new String[daysOfMonth+dayOfWeek];
 		lastDaysOfMonth = sc.getDaysOfMonth(isLeapyear, month-1);  //上一个月的总天数
 		Log.d("DAY", isLeapyear+" ======  "+daysOfMonth+"  ============  "+dayOfWeek+"  =========   "+lastDaysOfMonth);
 		getweek(year,month);
 	}
 	
-	//将一个月中的每一天的值添加入数组dayNuber中
+	/**
+	 * 将一个月中的每一天的值添加入数组dayNuber中
+	 * @param year
+	 * @param month
+	 */
 	private void getweek(int year, int month) {
 		int j = 1;
 		int flag = 0;

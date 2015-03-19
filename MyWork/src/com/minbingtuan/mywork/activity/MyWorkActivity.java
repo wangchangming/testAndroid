@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,25 +47,28 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	private RadioButton buttonSearch;
 	private RadioButton buttonSetting;
 	private RadioGroup mRadioGroup;
-
 	private ImageButton buttonWorkOn;
 	private ImageButton buttonWorkOff;
-
 	private TextView mTextTime;
 	private TextView mLocation;
 	private TextView mUserName;
 	private TextView Date;
-
+	private TextView amDate;
+	private TextView pmDate;
 	private MyApplication myApp;
-
 	private int curCheckId = R.id.buttonWork;
-
+	private SharedPreferences shared;
+	private int userID;
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mywork);
+		shared = getSharedPreferences("sign_message", Activity.MODE_PRIVATE);
 		myApp = (MyApplication) getApplication();
-		HttpGetSearchRecord();
+		userID = myApp.getUserId();//获取用户ID号
+
+		//这里activity每次进入都得重新调用一次服务器
+		//HttpGetSearchRecord();
 
 		RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.layoutTitle);
 		buttonSearch = (RadioButton) titleLayout.findViewById(R.id.buttonSearch);
@@ -76,6 +80,8 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		mLocation = (TextView) findViewById(R.id.textView1);
 		mUserName = (TextView) findViewById(R.id.TextViewName);
 		Date = (TextView) findViewById(R.id.TextViewDate);
+		amDate = (TextView) findViewById(R.id.TextView04);
+		pmDate = (TextView) findViewById(R.id.TextView07);
 		TextPaint tp = mUserName.getPaint();
 		tp.setFakeBoldText(true);
 
@@ -89,15 +95,53 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		buttonSetting.setOnClickListener(this);
 		buttonWorkOn.setOnClickListener(this);
 		buttonWorkOff.setOnClickListener(this);
+		
 
+		//从本地存储查询当天的签到信息
+		ReadSignDate();
+
+		//每隔30秒更新一次UI主界面
 		myHandler.sendEmptyMessage(TIME_UPDATE_UI);
 	}
 
+	
+	/**
+	 * 这里调用存储数据，获取签到记录
+	 */
+	public void ReadSignDate(){
+		String today = shared.getString("today", DateUtils.getDate());
+		String ID = shared.getString("userId", Integer.toString(userID));
+		String amSharedDate = shared.getString("amTime", "2015.03.19 09:00:35");
+		String pmSharedDate = shared.getString("pmTime", "2015.03.19 18:16:35");
+		if(today.equals(DateUtils.getDate())&&ID.equals(Integer.toString(userID))){//如果今天有签到信息
+			//判断上午是否签到
+			if(!"".equals(amSharedDate)){//如果上午已经签到
+				buttonWorkOn.setClickable(false);
+				buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
+				amDate.setText(amSharedDate);
+			}
+			if(!"".equals(pmSharedDate)){//如果下午已经签到
+				buttonWorkOff.setClickable(false);
+				buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
+				pmDate.setText(pmSharedDate);
+			}
+		}else{//表示今天某人没有签到
+			
+		}
+	}
+	
+	/**
+	 * 发送GPS请求，启动广播
+	 */
 	public void SetGpsFerquency() {
 		Intent intent = new Intent(MyAMapGpsService.gpsFerquencyAction);
 		sendBroadcast(intent);
 	}
 
+	/**
+	 * 发送签到Http请求,处理点击签到事件
+	 * @param type
+	 */
 	public void HttpGetRequestRegistration(final int type) {
 
 		RequestQueue queue = Volley.newRequestQueue(this);
@@ -120,14 +164,23 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.Registration_Success),
 									Toast.LENGTH_SHORT).show();
+							SharedPreferences.Editor edit = shared.edit();//已编辑的方式打开
+							edit.putString("today",DateUtils.getDate());//存入今天的日期
+							edit.putString("userId",Integer.toString(userID));//存入今天的日期
+							
 							if (type == 1) {
 								buttonWorkOn.setClickable(false);
 								buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
+								amDate.setText(DateUtils.getSystemDate());
+								edit.putString("amTime", DateUtils.getSystemDate());
 							}
 							if (type == 2) {
 								buttonWorkOff.setClickable(false);
 								buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
+								pmDate.setText(DateUtils.getSystemDate());
+								edit.putString("pmTime", DateUtils.getSystemDate());
 							}
+							edit.commit();
 						}
 						if (status < 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.Registration_Failed),
@@ -147,47 +200,13 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		queue.add(jsObjectRequest);
 	}
 
-	public void HttpGetSearchRecord() {
-		RequestQueue queue = Volley.newRequestQueue(this);
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("managerId", Integer.toString(myApp.getUserId()));
-		params.put("today", DateUtils.getDate());
-		String url = MyApplication.localSEARCHREAORD;
-		url += StringUtils.encodeUrl(params);
 
-		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-				new Response.Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
-						int type1 = response.optInt("type1");
-						int type2 = response.optInt("type2");
-						if (type1 == 0) {
-							buttonWorkOn.setClickable(false);
-							buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
-						}
-						if (type2 == 0) {
-							buttonWorkOff.setClickable(false);
-							buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
-						}
-					}
-
-				}, new Response.ErrorListener() {
-
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						Toast.makeText(getApplicationContext(),
-								VolleyErrorHelper.handleServerError(error, getApplication()), Toast.LENGTH_SHORT)
-								.show();
-					}
-
-				});
-		queue.add(jsObjectRequest);
-	}
 
 	public final int TIME_UPDATE_UI = 1000;
 
+	/**
+	 * handler用于处理消息，每隔30秒更新一次UI
+	 */
 	public Handler myHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -246,5 +265,47 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+	
+	/**
+	 * 启动界面的时候，发送Http请求。从服务器获取签到数据
+	 */
+//	public void HttpGetSearchRecord() {
+//		RequestQueue queue = Volley.newRequestQueue(this);
+//		HashMap<String, String> params = new HashMap<String, String>();
+//		params.put("managerId", Integer.toString(myApp.getUserId()));
+//		params.put("today", DateUtils.getDate());
+//		String url = MyApplication.localSEARCHREAORD;
+//		url += StringUtils.encodeUrl(params);
+//
+//		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+//				new Response.Listener<JSONObject>() {
+//
+//					@Override
+//					public void onResponse(JSONObject response) {
+//						// TODO Auto-generated method stub
+//						int type1 = response.optInt("type1");
+//						int type2 = response.optInt("type2");
+//						if (type1 == 0) {
+//							buttonWorkOn.setClickable(false);
+//							buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
+//						}
+//						if (type2 == 0) {
+//							buttonWorkOff.setClickable(false);
+//							buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
+//						}
+//					}
+//
+//				}, new Response.ErrorListener() {
+//
+//					@Override
+//					public void onErrorResponse(VolleyError error) {
+//						Toast.makeText(getApplicationContext(),
+//								VolleyErrorHelper.handleServerError(error, getApplication()), Toast.LENGTH_SHORT)
+//								.show();
+//					}
+//
+//				});
+//		queue.add(jsObjectRequest);
+//	}
 
 }

@@ -218,6 +218,12 @@ public class MyApplication extends Application {
 
 	private gpsInfo myGpsInfo = new gpsInfo();
 
+	/**
+	 * 设置地理位置信息
+	 * @param addr  地址信息
+	 * @param lon   经度
+	 * @param lat   纬度
+	 */
 	public void setGpsInfo(String addr, double lon, double lat) {
 		myGpsInfo.address = addr;
 		myGpsInfo.longitude = lon;//经度
