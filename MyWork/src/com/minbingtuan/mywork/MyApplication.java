@@ -1,6 +1,5 @@
 package com.minbingtuan.mywork;
 
-import com.minbingtuan.mywork.utils.StringUtils;
 
 import android.app.Application;
 import android.content.Context;

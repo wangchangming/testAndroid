@@ -41,8 +41,6 @@ public class MyLoginActivity extends Activity {
 	private String mPassWord;
 
 	private MyApplication myApp;
-	
-
 
 	public void onCreate(Bundle savedInstanceState) {
 
