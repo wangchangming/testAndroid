@@ -24,15 +24,15 @@ public class DBHelpler extends SQLiteOpenHelper {
         String sql = "create table "+TABLENAME+
                 "(" 
                 +"id INTEGER PRIMARY KEY ,"
-                +"userid int not null,"
-                +"username varchar(50) not null,"
-                +"realname varchar(20) not null,"
-                +"password varchar(50) not null,"
-                +"mobile   varchar(20) not null,"
-                +"email    varchar(20),"
-                +"groupId  int,"
-                +"birthday varchar(20)," 
-                +"groupName varchar(50)"
+                +"userid INTEGER not null,"
+                +"username VARCHAR(50) NOT NULL,"
+                +"realname VARCHAR(20) NOT NULL,"
+                +"password VARCHAR(50) NOT NULL,"
+                +"mobile   VARCHAR(20) NOT NULL,"
+                +"email    VARCHAR(20),"
+                +"groupId  INTEGER,"
+                +"birthday VARCHAR(20)," 
+                +"groupName VARCHAR(50)"
         		+")";
         db.execSQL(sql);
 

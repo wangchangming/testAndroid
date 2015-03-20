@@ -12,12 +12,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
+import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,7 +32,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MyLoginActivity extends Activity {
+public class MyLoginActivity extends Activity implements OnClickListener{
 
 	private Button buttonLogin = null;
 	private Button buttonRegister = null;
@@ -41,6 +43,7 @@ public class MyLoginActivity extends Activity {
 	private String mPassWord;
 
 	private MyApplication myApp;
+	SharedPreferences shared;
 
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -48,8 +51,11 @@ public class MyLoginActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_userlogin);
+		
+		
 		myApp = (MyApplication) getApplication();
 
+		//这里判断用户的登录的状态
 		if (MyApplication.getLoginStatus()) {
 			Intent intent = new Intent();
 			intent.setClass(MyLoginActivity.this, MyWorkActivity.class);
@@ -57,56 +63,48 @@ public class MyLoginActivity extends Activity {
 			finish();
 		}
 
-		mEditTextUserName = (EditText) findViewById(R.id.EditTextUserName);
-		mEditTextUserPassWord = (EditText) findViewById(R.id.EditTextUserPassWord);
-		buttonLogin = (Button) findViewById(R.id.buttonLogin);
-		buttonRegister = (Button) findViewById(R.id.buttonRegister);
-		checkBox = (CheckBox) findViewById(R.id.check);
-		
-		
 		//如果用户名已经保存
 		if(!"".equals(StringUtils.userName)){
 			mEditTextUserName.setText(StringUtils.userName);
 			mEditTextUserPassWord.setText(StringUtils.password);
 		}
 		
-
-		buttonLogin.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				mUserName = mEditTextUserName.getText().toString();
-				mPassWord = mEditTextUserPassWord.getText().toString();
-				if (TextUtils.isEmpty(mUserName) || TextUtils.isEmpty(mPassWord)) {
-					Toast.makeText(getApplicationContext(), getString(R.string.Please_enter_the_UserName_to_log_on),
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-				if (Utils.isFastDoubleClick()) {  
-			        return;  
-			    }
-				if (!myApp.isConnect()) {
-					Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
-					return;
-				}
-				HttpGetRequestLogin(mUserName, mPassWord);
-			}
-		});
-
-		buttonRegister = (Button) findViewById(R.id.buttonRegister);
-		buttonRegister.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent();
-				intent.setClass(MyLoginActivity.this, MyRegisterActivity.class);
-				startActivity(intent);
-				finish();
-			}
-		});
-		
+		//这里判断用户是否首次登录，根据情况作出相应的处理
+		init();
 	}
 
+	//关于自动登录的问题
+	public void init(){
+		//获取布局信息
+		mEditTextUserName = (EditText) findViewById(R.id.EditTextUserName);
+		mEditTextUserPassWord = (EditText) findViewById(R.id.EditTextUserPassWord);
+		buttonLogin = (Button) findViewById(R.id.buttonLogin);
+		buttonRegister = (Button) findViewById(R.id.buttonRegister);
+		checkBox = (CheckBox) findViewById(R.id.check);
+		buttonLogin.setOnClickListener(this);
+		buttonRegister.setOnClickListener(this);
+		
+		shared = getSharedPreferences("userInfo", 0);
+		boolean isFirstLogin = shared.getBoolean("isFirstLogin", false);
+		if(isFirstLogin){//如果是非首次进入应用
+			//取出上次登录用户的个人信息
+			String uName = shared.getString("uName", "");
+			String uPassword = shared.getString("uPwd", "");
+			if(!"".equals(uName)&&!"".equals(uPassword)){//如果用户名和密码存在
+				//直接跳转到主界面
+				startActivity(new Intent(this,MyWorkActivity.class));
+				finish();
+			}else{//如果上次登录时点击了退出程序
+				Toast.makeText(this, getString(R.string.input_name_pwd), Toast.LENGTH_SHORT).show();
+			}
+		}else{//如果是首次进入应用
+			Toast.makeText(this, getString(R.string.welcome), Toast.LENGTH_LONG).show();
+			Editor edit = shared.edit();
+			edit.putBoolean("isFirstLogin", true);//表示非首次登录
+			edit.commit();
+		}
+	}
+	
 	public void HttpGetRequestLogin(String mUserName, String mPassWord) {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -115,6 +113,10 @@ public class MyLoginActivity extends Activity {
 		String url = MyApplication.LocalLoginUrl;
 		url += StringUtils.encodeUrl(params);
 
+		Toast.makeText(MyLoginActivity.this, url, Toast.LENGTH_LONG).show();
+		System.out.println(url);
+		LogHelper.trace(url);
+		
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
 				new Response.Listener<JSONObject>() {
 
@@ -138,14 +140,25 @@ public class MyLoginActivity extends Activity {
 							myApp.setLoginStatus(true);
 
 							if(checkBox.isChecked()){
+								
+								//如果选择了自动登录，则把个人信息保存在本地
+								Editor edit = shared.edit();
+								edit.putInt("uId", id);
+								edit.putInt("uGroupId", groupId);
+								edit.putString("uName", userName);
+								edit.putString("uRealName", realName);
+								edit.putString("uPwd", pwd);
+								edit.putString("uMobile", mobile);
+								edit.putString("uEmail", email);
+								edit.putString("uBirthday", birthday);
+								edit.putString("uGroupName", groupName);
+								edit.commit();
+								
 								StringUtils.userName = userName;
 								StringUtils.password = pwd; 
-								System.out.println(">>>>>>>>>>>>"+StringUtils.userName+"????"+StringUtils.password);
-								Log.i("name_password", userName+"--"+pwd);
-							}else{
-								StringUtils.userName = "";
-								StringUtils.password = "";
+								
 							}
+							
 							Toast.makeText(getApplicationContext(), getString(R.string.Login_successful),
 									Toast.LENGTH_SHORT).show();
 							Intent intent = new Intent();
@@ -167,6 +180,7 @@ public class MyLoginActivity extends Activity {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						
 						Toast.makeText(getApplicationContext(),
 								VolleyErrorHelper.handleServerError(error, getApplication()), Toast.LENGTH_SHORT)
 								.show();
@@ -190,5 +204,38 @@ public class MyLoginActivity extends Activity {
 	        lastClickTime = time;     
 	        return false;     
 	    }  
+	}
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		
+		case R.id.buttonLogin://如果点击登录按钮
+			mUserName = mEditTextUserName.getText().toString();
+			mPassWord = mEditTextUserPassWord.getText().toString();
+			if (TextUtils.isEmpty(mUserName) || TextUtils.isEmpty(mPassWord)) {
+				Toast.makeText(getApplicationContext(), getString(R.string.Please_enter_the_UserName_to_log_on),
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if (Utils.isFastDoubleClick()) {  
+		        return;  
+		    }
+			if (!myApp.isConnect()) {
+				Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
+				return;
+			}
+			HttpGetRequestLogin(mUserName, mPassWord);
+			break;
+			
+		case R.id.buttonRegister://如果点击注册按钮
+			Intent intent = new Intent();
+			intent.setClass(MyLoginActivity.this, MyRegisterActivity.class);
+			startActivity(intent);
+			finish();
+			break;
+
+		default:
+			break;
+		}
 	}  
 }

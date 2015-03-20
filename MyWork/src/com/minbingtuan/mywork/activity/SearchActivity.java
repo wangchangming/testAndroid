@@ -7,6 +7,9 @@ import java.util.Date;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.CalendarAdapter;
 import com.minbingtuan.mywork.utils.DateUtils;
+import com.minbingtuan.mywork.utils.LogHelper;
+import com.minbingtuan.mywork.wheel.StrericWheelAdapter;
+import com.minbingtuan.mywork.wheel.WheelView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,6 +28,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -58,6 +62,12 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 	private int curCheckId = R.id.buttonSearch;
 	private TextView curDate;
 	
+	public static String[] yearContent = null;
+
+    public static String[] monthContent = null;
+    
+    private WheelView yearWheel, monthWheel;
+
 	public SearchActivity() {  
 		  
         Date date = new Date();  
@@ -183,14 +193,71 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 			finish();
 			break;
 		case R.id.curDate://点击弹出日期选择框
-			calV = new CalendarAdapter(this,getResources(),jumpMonth,jumpYear,2015,5,5); 
-			calV.notifyDataSetChanged();
-			gridView.setAdapter(calV); 
+			initData();
+			View view = ((LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(
+                    R.layout.date_time_selected, null);
+			
+			Calendar calendar = Calendar.getInstance();
+            int curYear = calendar.get(Calendar.YEAR);
+            int curMonth = calendar.get(Calendar.MONTH) + 1;
+            
+            yearWheel = (WheelView)view.findViewById(R.id.yearwheel);
+            monthWheel = (WheelView)view.findViewById(R.id.monthwheel);
+            
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(view);
+
+            yearWheel.setAdapter(new StrericWheelAdapter(yearContent));
+            yearWheel.setCurrentItem(curYear - 2000);
+            yearWheel.setCyclic(true);
+            yearWheel.setInterpolator(new AnticipateOvershootInterpolator());
+
+            monthWheel.setAdapter(new StrericWheelAdapter(monthContent));
+
+            monthWheel.setCurrentItem(curMonth - 1);
+
+            monthWheel.setCyclic(true);
+            monthWheel.setInterpolator(new AnticipateOvershootInterpolator());
+            
+            builder.setTitle(R.string.selected_year_month);
+            builder.setPositiveButton(R.string.determine,
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            StringBuffer sb = new StringBuffer();
+                            sb.append(yearWheel.getCurrentItemValue()).append(".")
+                                    .append(monthWheel.getCurrentItemValue());
+                            curDate.setText(sb);
+                			int dYear = Integer.parseInt(yearWheel.getCurrentItemValue());
+                			int dMonth = Integer.parseInt(monthWheel.getCurrentItemValue());
+                			calV = new CalendarAdapter(SearchActivity.this,getResources(),dYear,dMonth,1); 
+                			calV.notifyDataSetChanged();
+                			gridView.setAdapter(calV); 
+                            dialog.cancel();
+                        }
+                    }).show();
 			break;
 		default:
 			break;
 		}
 	}
+	
+	public void initData() {
+        yearContent = new String[50];
+        for (int i = 0; i < 50; i++) {
+            yearContent[i] = String.valueOf(i + 2000);
+        }
+
+        monthContent = new String[12];
+        for (int i = 0; i < 12; i++) {
+            monthContent[i] = String.valueOf(i + 1);
+            if (monthContent[i].length() < 2) {
+                monthContent[i] = "0" + monthContent[i];
+            }
+        }
+    }
 
 
 }

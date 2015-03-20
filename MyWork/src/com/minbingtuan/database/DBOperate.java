@@ -1,5 +1,6 @@
 package com.minbingtuan.database;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DBOperate {
@@ -10,9 +11,16 @@ public class DBOperate {
     
     public DBOperate(SQLiteDatabase db){
         this.db = db;
+        
     }
     
-    private void insert() {
-        
+    private void insert(ContentValues values) {
+        db.insert(TABLENAME, null, values);
+    }
+    
+    public void close(){
+    	if(db!=null){
+    		db.close();
+    	}
     }
 }

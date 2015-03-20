@@ -22,8 +22,11 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,6 +63,7 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 	private RadioGroup mRadioGroup;
 	private int curCheckId = R.id.buttonSetting;
+	SharedPreferences shared;
 
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -117,6 +121,13 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		builder.setPositiveButton(getString(R.string.determine), new android.content.DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				//如果点击了退出程序，则把缓存清除
+				shared = getSharedPreferences("userInfo", 0);
+				Editor edit = shared.edit();
+				edit.clear();
+				edit.putBoolean("isFirstLogin", true);//表示非首次登录
+				edit.commit();
+				
 				dialog.dismiss();
 				MyApplication myApp = (MyApplication) getApplication();
 				myApp.stopGPSService();
@@ -146,7 +157,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 				if (edName.getText().toString().trim() == null || edName.getText().toString().trim().equals("")) {
 					return;

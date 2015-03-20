@@ -116,6 +116,14 @@ public class CalendarAdapter extends BaseAdapter {
 		
 	}
 	
+	/**
+	 * 构造器
+	 * @param context
+	 * @param rs
+	 * @param year
+	 * @param month
+	 * @param day
+	 */
 	public CalendarAdapter(Context context,Resources rs,int year, int month, int day){
 		this();
 		this.context= context;

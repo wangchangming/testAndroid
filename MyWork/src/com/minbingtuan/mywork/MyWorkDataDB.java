@@ -36,19 +36,25 @@ public class MyWorkDataDB extends SQLiteOpenHelper {
 	public final static String CARD_TIME_TYPE = "card_time_type";
 	
 	enum CardTimeType{
-		CARD_TIME_ON_DURTY,//�ϰ�
-		CARD_TIME_OFF_DURTY,//�°�
-		CARD_TIME_GO_OUT,//���
-		CARD_TIME_GO_BACK,//�ع�
-		CARD_TIME_DAY_OFF,//���
-		CARD_TIME_DAY_BACK,//���
+		CARD_TIME_ON_DURTY,
+		CARD_TIME_OFF_DURTY,
+		CARD_TIME_GO_OUT,
+		CARD_TIME_GO_BACK,
+		CARD_TIME_DAY_OFF,
+		CARD_TIME_DAY_BACK,
 	}
 
+	/**
+	 * 构造器
+	 * @param context
+	 */
 	public MyWorkDataDB(Context context) {
-		// TODO Auto-generated constructor stub
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	/**
+	 * 创建表
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
@@ -74,6 +80,9 @@ public class MyWorkDataDB extends SQLiteOpenHelper {
 		Log.d(TAG, "onCreate();");
 	}
 
+	/**
+	 * 更新表
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
@@ -89,6 +98,11 @@ public class MyWorkDataDB extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 
+	/**
+	 * 查询传入参数表中的数据，返回结果集
+	 * @param name
+	 * @return
+	 */
 	public Cursor selectTable(String name) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(name, null, null, null, null, null,
@@ -96,6 +110,11 @@ public class MyWorkDataDB extends SQLiteOpenHelper {
 		return cursor;
 	}
 
+	/**
+	 * 新增一个部门名称，返回插入烦人记录数
+	 * @param name
+	 * @return
+	 */
 	public long insertGroup(String name) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		/* ContentValues */
@@ -106,6 +125,13 @@ public class MyWorkDataDB extends SQLiteOpenHelper {
 		return row;
 	}
 
+	/**
+	 * 新增一个人的记录信息，返回插入烦人记录数
+	 * @param name
+	 * @param tel
+	 * @param group
+	 * @return
+	 */
 	public long insertPerson(String name, String tel, String group) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		/* ContentValues */
@@ -118,6 +144,18 @@ public class MyWorkDataDB extends SQLiteOpenHelper {
 		return row;
 	}
 
+	/**
+	 * 新增一条时间记录，返回插入的记录数
+	 * @param id
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @param hour
+	 * @param minute
+	 * @param time
+	 * @param type
+	 * @return
+	 */
 	public long insertAttendance(int id, int year, int month, int day,
 			int hour, int minute, String time, int type) {
 		SQLiteDatabase db = this.getWritableDatabase();

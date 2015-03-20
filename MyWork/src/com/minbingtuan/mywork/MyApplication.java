@@ -207,7 +207,6 @@ public class MyApplication extends Application {
 		String birthday;
 		int groupId;
 		String groupName;
-
 		String sex;
 		String showCustomMobile;
 		String showMemberMobile;
