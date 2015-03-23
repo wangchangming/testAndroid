@@ -8,6 +8,7 @@ import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.CalendarAdapter;
 import com.minbingtuan.mywork.utils.DateUtils;
 import com.minbingtuan.mywork.utils.LogHelper;
+import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.wheel.StrericWheelAdapter;
 import com.minbingtuan.mywork.wheel.WheelView;
 
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -259,5 +261,15 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
         }
     }
 
+	/**
+	 * 菜单、返回键响应
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){//如果点击了返回键
+			StringUtils.exitBy2Click(SearchActivity.this);
+		}
+		return false;
+	}
 
 }

@@ -11,8 +11,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
+import com.minbingtuan.mywork.utils.LogHelper;
+import com.minbingtuan.mywork.utils.Setting;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 
@@ -27,6 +30,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,7 +51,7 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	private RadioButton buttonSearch;
 	private RadioButton buttonWork;
 	private Button buttonExc;
-	private ImageButton mArrow;
+	private RelativeLayout reSetPwd;
 
 	private DatePicker datePicker;
 
@@ -57,6 +61,8 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	private TextView mEmail;
 	private TextView mGroup;
 	private TextView mPassWord;
+	
+	private ImageView topImg;
 
 	private ImageView mUserImage;
 	Intent intent;
@@ -64,11 +70,17 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	private RadioGroup mRadioGroup;
 	private int curCheckId = R.id.buttonSetting;
 	SharedPreferences shared;
+	
+	private MyApplication myApp;
 
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
+		
+
+		shared = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
+		myApp = (MyApplication) getApplication();
 
 		RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.layoutTitle);
 		buttonSearch = (RadioButton) titleLayout.findViewById(R.id.buttonSearch);
@@ -81,19 +93,28 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		mEmail = (TextView) findViewById(R.id.TextVieweMail);
 		mGroup = (TextView) findViewById(R.id.TextViewGroup);
 		mPassWord = (TextView) findViewById(R.id.TextViewResetPassWord);
-		mArrow = (ImageButton) findViewById(R.id.Arrow2);
+		reSetPwd = (RelativeLayout) findViewById(R.id.RelativeLayout10);
 
 		mUserImage = (ImageView) findViewById(R.id.imageView1);
+		topImg = (ImageView) findViewById(R.id.imageView2);
 
 		mRadioGroup.check(curCheckId);
 
-		MyApplication myApp = (MyApplication) getApplication();
-		mName.setText(myApp.getRealName().equals("null") ? getString(R.string.Setting_name) : myApp.getRealName());
-		mPhone.setText(myApp.getUserMobile());
-		mBirthday.setText(myApp.getUserBirthday().equals("null") ? getString(R.string.Setting_birthday) : myApp
-				.getUserBirthday());
-		mEmail.setText(myApp.getUserEmail());
-		mGroup.setText(myApp.getUserGroupName());
+		//判断是否自动登录
+		if(Setting.autoLogin){
+			mName.setText(shared.getString("uRealName", null).equals("null") ? getString(R.string.Setting_name) : shared.getString("uRealName", ""));
+			mPhone.setText(shared.getString("uMobile", ""));
+			mBirthday.setText(shared.getString("uBirthday", null).equals("null") ? getString(R.string.Setting_birthday) : shared.getString("uBirthday", ""));
+			mEmail.setText(shared.getString("uEmail", ""));
+			mGroup.setText(shared.getString("uGroupName", ""));
+		}else{
+			mName.setText(myApp.getRealName().equals("null") ? getString(R.string.Setting_name) : myApp.getRealName());
+			mPhone.setText(myApp.getUserMobile());
+			mBirthday.setText(myApp.getUserBirthday().equals("null") ? getString(R.string.Setting_birthday) : myApp
+					.getUserBirthday());
+			mEmail.setText(myApp.getUserEmail());
+			mGroup.setText(myApp.getUserGroupName());
+		}
 
 		buttonSearch.setOnClickListener(this);
 		buttonWork.setOnClickListener(this);
@@ -104,7 +125,8 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		mEmail.setOnClickListener(this);
 		mUserImage.setOnClickListener(this);
 		mPassWord.setOnClickListener(this);
-		mArrow.setOnClickListener(this);
+		reSetPwd.setOnClickListener(this);
+		topImg.setOnClickListener(this);
 
 	}
 
@@ -122,14 +144,12 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				//如果点击了退出程序，则把缓存清除
-				shared = getSharedPreferences("userInfo", 0);
 				Editor edit = shared.edit();
 				edit.clear();
 				edit.putBoolean("isFirstLogin", true);//表示非首次登录
 				edit.commit();
 				
 				dialog.dismiss();
-				MyApplication myApp = (MyApplication) getApplication();
 				myApp.stopGPSService();
 				myApp.stopPositonService();
 				myApp.setLoginStatus(false);
@@ -145,7 +165,9 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		builder.create().show();
 	}
 
-	// 修改名字Dialog
+	/**
+	 * 修改名字的对话框 Dialog
+	 */
 	private void inputNameDialog() {
 
 		final EditText edName = new EditText(this);
@@ -169,7 +191,9 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		builder.show();
 	}
 
-	// 修改电话Dialog
+	/**
+	 * 修改电话对话框  Dialog
+	 */
 	public void inputPhoneDialog() {
 		final EditText edPhone = new EditText(this);
 		edPhone.setFocusable(true);
@@ -200,7 +224,9 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		builder.show();
 	}
 
-	// 选择出生日期Dialog
+	/**
+	 * 选择出生日期对话框
+	 */
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -241,6 +267,9 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	}
 
 	// 修改邮箱Dialog
+	/**
+	 * 修改邮箱对话框
+	 */
 	public void inputEmailDialog() {
 		final EditText edEmail = new EditText(this);
 		edEmail.setFocusable(true);
@@ -269,12 +298,17 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	public void saveRealName(String name) {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		final HashMap<String, String> params = new HashMap<String, String>();
-		MyApplication mApp = (MyApplication) getApplication();
-		String id = Integer.toString(mApp.getUserId());
+		String id = "";
+		//获取用户ID
+		if(Setting.autoLogin){//来自缓存
+			id = Integer.toString(shared.getInt("uId", 0));
+		}else{//来自application
+			id = Integer.toString(myApp.getUserId());
+		}
 		params.put("name", name);
 		params.put("id", id);
 
-		String url = MyApplication.localSETTINGNAME;
+		String url = Constants.localSETTINGNAME;
 		url += StringUtils.encodeUrl(params);
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
 				new Response.Listener<JSONObject>() {
@@ -286,9 +320,14 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),
 									Toast.LENGTH_SHORT).show();
-							MyApplication myApp = (MyApplication) getApplication();
+							//存入application
 							myApp.setRealName(params.get("name"));
-							mName.setText(myApp.getRealName());
+							//存入缓存
+							Editor edit = shared.edit();
+							edit.putString("uRealName", params.get("name"));
+							edit.commit();
+							
+							mName.setText(params.get("name"));
 						}
 						if (status < 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedFailed),
@@ -314,11 +353,18 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	public void savePhone(String Phone) {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		final HashMap<String, String> params = new HashMap<String, String>();
-		MyApplication mApp = (MyApplication) getApplication();
-		String id = Integer.toString(mApp.getUserId());
+		
+		String id = "";
+		//获取用户ID
+		if(Setting.autoLogin){//来自缓存
+			id = Integer.toString(shared.getInt("uId", 0));
+		}else{//来自application
+			id = Integer.toString(myApp.getUserId());
+		}
+		
 		params.put("mobile", Phone);
 		params.put("id", id);
-		String url = MyApplication.localSETTINGMOBILE;
+		String url = Constants.localSETTINGMOBILE;
 		url += StringUtils.encodeUrl(params);
 
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -331,9 +377,15 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),
 									Toast.LENGTH_SHORT).show();
-							MyApplication myApp = (MyApplication) getApplication();
+							
+							//存入application
 							myApp.setUserMobile(params.get("mobile"));
-							mPhone.setText(myApp.getUserMobile());
+							//存入缓存
+							Editor edit = shared.edit();
+							edit.putString("uMobile", params.get("mobile"));
+							edit.commit();
+							
+							mPhone.setText(params.get("mobile"));
 						}
 						if (status < 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedFailed),
@@ -357,11 +409,16 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	public void saveBirthday(String Birthday) {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		final HashMap<String, String> params = new HashMap<String, String>();
-		MyApplication mApp = (MyApplication) getApplication();
-		String id = Integer.toString(mApp.getUserId());
+		String id = "";
+		//获取用户ID
+		if(Setting.autoLogin){//来自缓存
+			id = Integer.toString(shared.getInt("uId", 0));
+		}else{//来自application
+			id = Integer.toString(myApp.getUserId());
+		}
 		params.put("birthday", Birthday);
 		params.put("id", id);
-		String url = MyApplication.localSETTINGBIRTHDAY;
+		String url = Constants.localSETTINGBIRTHDAY;
 		url += StringUtils.encodeUrl(params);
 
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -374,9 +431,15 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),
 									Toast.LENGTH_SHORT).show();
-							MyApplication myApp = (MyApplication) getApplication();
+							
+							//存入application
 							myApp.setUserBirthday(params.get("birthday"));
-							mBirthday.setText(myApp.getUserBirthday());
+							//存入缓存
+							Editor edit = shared.edit();
+							edit.putString("uBirthday", params.get("birthday"));
+							edit.commit();
+							
+							mBirthday.setText(params.get("birthday"));
 						}
 						if (status < 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedFailed),
@@ -400,8 +463,13 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 	public void saveEmail(String email) {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		final HashMap<String, String> params = new HashMap<String, String>();
-		MyApplication mApp = (MyApplication) getApplication();
-		String id = Integer.toString(mApp.getUserId());
+		String id = "";
+		//获取用户ID
+		if(Setting.autoLogin){//来自缓存
+			id = Integer.toString(shared.getInt("uId", 0));
+		}else{//来自application
+			id = Integer.toString(myApp.getUserId());
+		}
 		params.put("email", email);
 		params.put("id", id);
 		String url = MyApplication.localSETTINGEMAIL;
@@ -417,9 +485,15 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),
 									Toast.LENGTH_SHORT).show();
-							MyApplication myApp = (MyApplication) getApplication();
-							myApp.setUserEmail(params.get("email"));
-							mEmail.setText(myApp.getUserEmail());
+							
+							//存入application
+							myApp.setUserBirthday(params.get("email"));
+							//存入缓存
+							Editor edit = shared.edit();
+							edit.putString("uEmail", params.get("email"));
+							edit.commit();
+							
+							mEmail.setText(params.get("email"));
 						}
 						if (status < 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedFailed),
@@ -466,12 +540,26 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		case R.id.TextVieweMail:
 			inputEmailDialog();
 			break;
-		case R.id.Arrow2:
+		case R.id.RelativeLayout10:
 			intent = new Intent(MySettingActivity.this, MyChangePwdActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.imageView2:
+			LogHelper.toast(this, "该功能正在开发，敬请期待。。。");
 			break;
 		default:
 			break;
 		}
+	}
+	
+	/**
+	 * 菜单、返回键响应
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){//如果点击了返回键
+			StringUtils.exitBy2Click(MySettingActivity.this);
+		}
+		return false;
 	}
 }

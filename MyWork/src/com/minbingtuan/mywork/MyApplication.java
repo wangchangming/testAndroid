@@ -1,6 +1,9 @@
 package com.minbingtuan.mywork;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -245,5 +248,21 @@ public class MyApplication extends Application {
 		double longitude;
 		double latitude;
 	}
+	
+	public static void exitMe() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                exit();
+            }
+        }, 1000);
+    }
+	
+	private static void exit() {
+        // 杀进程
+        int pid = android.os.Process.myPid();
+        android.os.Process.killProcess(pid);
+        System.exit(0);
+    }
 
 }

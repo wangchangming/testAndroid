@@ -12,10 +12,16 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.minbingtuan.mywork.MyApplication;
+import com.minbingtuan.mywork.R;
+
+import android.content.Context;
 import android.text.TextUtils;
 
 public class StringUtils {
@@ -323,7 +329,24 @@ public class StringUtils {
 		return pattern.matcher(str).matches();
 	}
 	/**
-	 * 
+	 * 双击退出函数
 	 */
+	public static void exitBy2Click(Context context){
+		Timer tExit = null;
+        if (Setting.isExit == false) {
+        	Setting.isExit = true; // 准备退出
+        	LogHelper.toast(context, context.getString(R.string.exit_click_tip));
+            tExit = new Timer();
+            tExit.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                	Setting.isExit = false; // 取消退出
+                }
+            }, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
+
+        } else {
+            MyApplication.exitMe();
+        }
+	}
 	
 }

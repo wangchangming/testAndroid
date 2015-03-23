@@ -55,6 +55,9 @@
     <string name="month">月</string>
     <string name="day">日</string>
     <string name="selected_year_month">请选择月份</string>
+    <string name="is_logining">正在登录，请稍后...!</string>
+    <string name="getData">正在获取数据...!</string>
+    <string name="exit_click_tip">再按一次退出程序</string>
 
     <!-- 退出 -->
     <string name="Sure_you_want_to_quit">确定要退出吗?</string>
