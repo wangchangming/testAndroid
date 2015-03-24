@@ -2,8 +2,10 @@ package com.minbingtuan.mywork.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import com.minbingtuan.mywork.R;
+import com.minbingtuan.mywork.model.DayOfMonth;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,6 +59,8 @@ public class CalendarAdapter extends BaseAdapter {
 	private String sys_year = "";
 	private String sys_month = "";
 	private String sys_day = "";
+	private List<DayOfMonth> list;
+	private DayOfMonth day;
 	
 	public CalendarAdapter(){
 		Date date = new Date();
@@ -118,21 +123,23 @@ public class CalendarAdapter extends BaseAdapter {
 	
 	/**
 	 * 构造器
-	 * @param context
-	 * @param rs
-	 * @param year
-	 * @param month
-	 * @param day
+	 * @param context 上下文
+	 * @param rs 资源
+	 * @param year 年
+	 * @param month 月
+	 * @param day 日
+	 * @param list 每月的签到数据
 	 */
-	public CalendarAdapter(Context context,Resources rs,int year, int month, int day){
+	public CalendarAdapter(Context context,Resources rs,int year, int month, int day,List<DayOfMonth> list){
 		this();
 		this.context= context;
 		sc = new SpecialCalendar();
 		lc = new LunarCalendar();
 		this.res = rs;
-		currentYear = String.valueOf(year);;  //得到跳转到的年份
+		currentYear = String.valueOf(year);  //得到跳转到的年份
 		currentMonth = String.valueOf(month);  //得到跳转到的月份
 		currentDay = String.valueOf(day);  //得到跳转到的天
+		this.list = list;
 		
 		getCalendar(Integer.parseInt(currentYear),Integer.parseInt(currentMonth));
 		
@@ -160,9 +167,11 @@ public class CalendarAdapter extends BaseAdapter {
 			convertView = LayoutInflater.from(context).inflate(R.layout.gridview_item, null);
 		 }
 		TextView textView = (TextView) convertView.findViewById(R.id.text);
+		ImageView am = (ImageView) convertView.findViewById(R.id.am);
+		ImageView pm = (ImageView) convertView.findViewById(R.id.pm);
 		RelativeLayout rt = (RelativeLayout) convertView.findViewById(R.id.RelativeLayout1);
 		String d = dayNumber[position].split("\\.")[0];
-		String dv = dayNumber[position].split("\\.")[1];
+//		String dv = dayNumber[position].split("\\.")[1];
 
 //		SpannableString sp = new SpannableString(d+"\n"+dv);//
 //		sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -180,10 +189,27 @@ public class CalendarAdapter extends BaseAdapter {
 			// 当前月信息显示
 			textView.setTextColor(Color.BLACK);// 当月字体设黑
 			drawable = res.getDrawable(R.drawable.current_day_bgc);
+			
+			//获取list里面的数据，填充到日历中
+			day = list.get(position - dayOfWeek);
+			if(day.getAmDate().compareTo("09:00")>0){//如果时间晚于9点
+				am.setBackgroundResource(R.drawable.mark2);
+			}else{
+				am.setBackgroundResource(R.drawable.mark1);
+			}
+			
+			if(day.getPmDate().compareTo("18:00")>=0){//如果时间晚于18点
+				pm.setBackgroundResource(R.drawable.mark4);
+			}else{
+				pm.setBackgroundResource(R.drawable.mark3);
+			}
+			
 
 		}else{//如果不是本月的，就直接隐藏
 			rt.setVisibility(View.GONE);
 		}
+		
+		//这里是设置日程的
 		if(schDateTagFlag != null && schDateTagFlag.length >0){
 			for(int i = 0; i < schDateTagFlag.length; i++){
 				if(schDateTagFlag[i] == position){
@@ -192,11 +218,15 @@ public class CalendarAdapter extends BaseAdapter {
 				}
 			}
 		}
+		//设置当天的背景
 		if(currentFlag == position){ 
 			//设置当天的背景
+			LogHelper.trace(position+"");
 			drawable = res.getDrawable(R.drawable.current_day_bgc);
 			textView.setTextColor(Color.RED);
 		}
+		
+		
 		return convertView;
 	}
 	

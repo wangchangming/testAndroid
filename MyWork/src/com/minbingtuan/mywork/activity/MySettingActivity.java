@@ -205,7 +205,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 				if (edPhone.getText().toString().trim() == null || edPhone.getText().toString().trim().equals("")) {
 					return;
@@ -248,7 +247,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 				builder.setPositiveButton(getString(R.string.determine), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
 						StringBuffer sb = new StringBuffer();
 						String mb = sb.append(
 								String.format("%d-%02d-%02d", datePicker.getYear(), datePicker.getMonth() + 1,
@@ -281,7 +279,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 				if (edEmail.getText().toString().trim() == null || edEmail.getText().toString().trim().equals("")) {
 					return;
@@ -315,7 +312,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
 						int status = response.optInt("status");
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),
@@ -372,7 +368,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
 						int status = response.optInt("status");
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),
@@ -426,7 +421,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
 						int status = response.optInt("status");
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),
@@ -480,7 +474,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
 						int status = response.optInt("status");
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ModifiedSuccessfully),

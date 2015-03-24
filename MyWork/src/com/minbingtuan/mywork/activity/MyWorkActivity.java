@@ -70,7 +70,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mywork);
+		setContentView(R.layout.activity_work);
 		
 		//获取数据对话框
 		dialog = CustomProgress.show(MyWorkActivity.this, getString(R.string.getData), true, null);
@@ -118,38 +118,10 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		//这里activity每次进入都得重新调用一次服务器
 		HttpGetSearchRecord();
 		
-		//从本地存储查询当天的签到信息
-		//ReadSignDate();
-
 		//每隔30秒更新一次UI主界面
 		myHandler.sendEmptyMessage(TIME_UPDATE_UI);
 	}
 
-	
-	/**
-	 * 这里调用存储数据，获取签到记录
-	 */
-//	public void ReadSignDate(){
-//		String today = shared.getString("today", DateUtils.getDate());
-//		String ID = shared.getString("userId", Integer.toString(userID));
-//		String amSharedDate = shared.getString("amTime", "2015.03.19 09:00:35");
-//		String pmSharedDate = shared.getString("pmTime", "2015.03.19 18:16:35");
-//		if(today.equals(DateUtils.getDate())&&ID.equals(Integer.toString(userID))){//如果今天有签到信息
-//			//判断上午是否签到
-//			if(!"".equals(amSharedDate)){//如果上午已经签到
-//				buttonWorkOn.setClickable(false);
-//				buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
-//				amDate.setText(amSharedDate);
-//			}
-//			if(!"".equals(pmSharedDate)){//如果下午已经签到
-//				buttonWorkOff.setClickable(false);
-//				buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
-//				pmDate.setText(pmSharedDate);
-//			}
-//		}else{//表示今天某人没有签到
-//			
-//		}
-//	}
 	
 	/**
 	 * 菜单、返回键响应
@@ -211,13 +183,11 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 								buttonWorkOn.setClickable(false);
 								buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
 								amDate.setText(DateUtils.getSystemDate());
-								edit.putString("amTime", DateUtils.getSystemDate());
 							}
 							if (type == 2) {
 								buttonWorkOff.setClickable(false);
 								buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
 								pmDate.setText(DateUtils.getSystemDate());
-								edit.putString("pmTime", DateUtils.getSystemDate());
 							}
 							edit.commit();
 						}
@@ -270,7 +240,6 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.buttonSearch:
 			intent = new Intent(MyWorkActivity.this, SearchActivity.class);
@@ -296,6 +265,12 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 				Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
 				return;
 			}
+			
+			//再判断一下上午是否签到，如果上午没有签到，则点击下午弹出提示信息
+//			if(){//如果上午没有签到。弹出提示信息
+//				提示
+//				return;
+//			}
 			HttpGetRequestRegistration(2);
 			((MyApplication) getApplication()).stopPositonService();
 			break;
@@ -329,7 +304,12 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
+						
+						/**
+						 * 这里需要获取一个签到信息的时间
+						 * 设置amDate、pmDate的时间显示
+						 */
+						
 						int type1 = response.optInt("type1");
 						int type2 = response.optInt("type2");
 						if (type1 == 0) {

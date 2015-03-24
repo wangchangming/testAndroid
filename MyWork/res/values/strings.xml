@@ -58,6 +58,7 @@
     <string name="is_logining">正在登录，请稍后...!</string>
     <string name="getData">正在获取数据...!</string>
     <string name="exit_click_tip">再按一次退出程序</string>
+    <string name="sign_info">早上打卡时间:%1$s\n下午打卡时间:%2$s</string>
 
     <!-- 退出 -->
     <string name="Sure_you_want_to_quit">确定要退出吗?</string>
