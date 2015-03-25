@@ -1,5 +1,8 @@
 package com.minbingtuan.mywork.activity;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -10,9 +13,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.LogHelper;
+import com.minbingtuan.mywork.utils.SDCardUtil;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 import com.minbingtuan.mywork.view.CustomProgress;
@@ -44,6 +49,7 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 	private MyApplication myApp;
 	private CustomProgress dialog;
 	SharedPreferences shared;
+	boolean isFirstLogin;
 
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -81,17 +87,21 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 		buttonLogin.setOnClickListener(this);
 		buttonRegister.setOnClickListener(this);
 		
-		boolean isFirstLogin = shared.getBoolean("isFirstLogin", false);
+		isFirstLogin = shared.getBoolean("isFirstLogin", false);
 		if(isFirstLogin){//如果是非首次进入应用
 			//取出上次登录用户的个人信息
 			String uName = shared.getString("uName", "");
 			String uPassword = shared.getString("uPwd", "");
-			if(!"".equals(uName)&&!"".equals(uPassword)){//如果用户名和密码存在
+			Boolean namePwd = shared.getBoolean("namePwd", false);
+			if(!"".equals(uName)&&!"".equals(uPassword)&&namePwd){//如果用户名和密码存在
 				//直接跳转到主界面
 				myApp.startGPSService();
 				myApp.setLoginStatus(true);
 				startActivity(new Intent(this,MyWorkActivity.class));
 				finish();
+			}else if(!"".equals(uName)&&!"".equals(uPassword)&&!namePwd){
+				mEditTextUserName.setText(uName);
+				mEditTextUserPassWord.setText(uPassword);
 			}else{//如果上次登录时点击了退出程序
 				Toast.makeText(this, getString(R.string.input_name_pwd), Toast.LENGTH_SHORT).show();
 			}
@@ -100,6 +110,7 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 			Editor edit = shared.edit();
 			edit.putBoolean("isFirstLogin", true);//表示非首次登录
 			edit.commit();
+			SDCardUtil.writeSD("first", Constants.USERINFOISFIRSTLOGIN);
 		}
 	}
 	
@@ -149,10 +160,14 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 								edit.putString("uBirthday", birthday);
 								edit.putString("uGroupName", groupName);
 								edit.putBoolean("autoLogin", true);
+								edit.putBoolean("namePwd", true);
 								edit.commit();
 								
 								StringUtils.userName = userName;
 								StringUtils.password = pwd; 
+								
+								//把用户名写入SD中
+								SDCardUtil.writeSD(userName,Constants.USERINFOPATH);
 								
 							}
 							
@@ -213,8 +228,6 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 		switch (v.getId()) {
 		
 		case R.id.buttonLogin://如果点击登录按钮
-			dialog = CustomProgress.show(MyLoginActivity.this, getString(R.string.is_logining), true, null);
-			
 			mUserName = mEditTextUserName.getText().toString();
 			mPassWord = mEditTextUserPassWord.getText().toString();
 			if (TextUtils.isEmpty(mUserName) || TextUtils.isEmpty(mPassWord)) {
@@ -229,7 +242,12 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 				Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
 				return;
 			}
+			if(!mUserName.equals(SDCardUtil.readSD(Constants.USERINFOPATH))){
+				LogHelper.toast(MyLoginActivity.this, "请用自己的账号登陆，谢谢！"+SDCardUtil.readSD(Constants.USERINFOPATH));
+				return;
+			}
 			HttpGetRequestLogin(mUserName, mPassWord);
+			dialog = CustomProgress.show(MyLoginActivity.this, getString(R.string.is_logining), true, null);
 			break;
 			
 		case R.id.buttonRegister://如果点击注册按钮
@@ -242,5 +260,6 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 		default:
 			break;
 		}
-	}  
+	}
+	
 }

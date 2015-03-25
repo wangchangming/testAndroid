@@ -118,13 +118,13 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 			{"22","08:54","17:55"},
 			{"23","08:47","17:22"},
 			{"24","09:00","18:30"},
-			{"25","08:55","18:01"},
-			{"26","08:51","18:05"},
-			{"27","09:03","18:00"},
-			{"28","09:10","18:30"},
-			{"29","08:40","18:09"},
-			{"30","08:01","18:07"},
-			{"31","09:00","18:06"}
+			{"25","08:55",""},
+			{"26","",""},
+			{"27","",""},
+			{"28","",""},
+			{"29","",""},
+			{"30","",""},
+			{"31","",""}
 			};
 
 	public SearchActivity() {  
@@ -267,24 +267,30 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 				day = list.get(position-dayOfWeek);
 				String am = day.getAmDate();
 				String pm = day.getPmDate();
-				String rs = SearchActivity.this.getString(R.string.sign_info);
-				String txt = String.format(rs, am,pm);
 				
-				LayoutInflater layoutInflater = (LayoutInflater) (SearchActivity.this)
-	                    .getSystemService(LAYOUT_INFLATER_SERVICE);
-				// 获取自定义布局文件poplayout.xml的视图
-	            View popview = layoutInflater.inflate(R.layout.activity_popview, null);
-	            TextView textView = (TextView) popview.findViewById(R.id.txt);
-	            textView.setText(txt);
-	            PopupWindow popWindow = new PopupWindow(popview,
-	                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-	            // 需要设置一下此参数，点击外边可消失 
-	            popWindow.setBackgroundDrawable(new BitmapDrawable()); 
-	            //设置点击窗口外边窗口消失 
-	            popWindow.setOutsideTouchable(true); 
-	            //规定弹窗的位置
-	            // 显示窗口 
-	            popWindow.showAsDropDown(view);
+				//判断item是否点击显示
+				if(!"".equals(am)){//在有签到信息的情况下item才可以被点击
+					String rs = SearchActivity.this.getString(R.string.sign_info);
+					String txt = String.format(rs, am,pm);
+					
+					LayoutInflater layoutInflater = (LayoutInflater) (SearchActivity.this)
+		                    .getSystemService(LAYOUT_INFLATER_SERVICE);
+					// 获取自定义布局文件poplayout.xml的视图
+		            View popview = layoutInflater.inflate(R.layout.activity_popview, null);
+		            TextView textView = (TextView) popview.findViewById(R.id.txt);
+		            textView.setText(txt);
+		            PopupWindow popWindow = new PopupWindow(popview,
+		                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		            // 需要设置一下此参数，点击外边可消失 
+		            popWindow.setBackgroundDrawable(new BitmapDrawable()); 
+		            //设置点击窗口外边窗口消失 
+		            popWindow.setOutsideTouchable(true); 
+		            //规定弹窗的位置
+		            // 显示窗口 
+		            popWindow.showAsDropDown(view);
+				}
+				
+				
 			}  
             
         });  

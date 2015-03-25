@@ -109,6 +109,7 @@
     <string name="ChangePassWord_failed">修改密码失败</string>
     <string name="OldPasswordCanNotBeTheSame">新旧密码不能相同</string>
     <string name="PassWordLengthShouldBe6to20">密码长度应为6-20位</string>
+    <string name="minbingtuan">民兵团\n欢迎您的加入！</string>
 
     <!-- 查询 -->
     <string name="RegisterInfoStatistics">签到信息统计</string>

@@ -192,17 +192,29 @@ public class CalendarAdapter extends BaseAdapter {
 			
 			//获取list里面的数据，填充到日历中
 			day = list.get(position - dayOfWeek);
-			if(day.getAmDate().compareTo("09:00")>0){//如果时间晚于9点
-				am.setBackgroundResource(R.drawable.mark2);
-			}else{
-				am.setBackgroundResource(R.drawable.mark1);
+			
+			//现在考虑空串的情况
+			//上午
+			if(!"".equals(day.getAmDate())){//如果字符串不为空
+				if(day.getAmDate().compareTo("09:00")>0){//如果时间晚于9点
+					am.setBackgroundResource(R.drawable.mark2);
+				}else{
+					am.setBackgroundResource(R.drawable.mark1);
+				}
+				
 			}
 			
-			if(day.getPmDate().compareTo("18:00")>=0){//如果时间晚于18点
-				pm.setBackgroundResource(R.drawable.mark4);
-			}else{
-				pm.setBackgroundResource(R.drawable.mark3);
+			//下午
+			if(!"".equals(day.getPmDate())){//如果下午签到时间不为空
+				if(day.getPmDate().compareTo("18:00")>=0){//如果时间晚于18点
+					pm.setBackgroundResource(R.drawable.mark4);
+				}else{
+					pm.setBackgroundResource(R.drawable.mark3);
+				}
+				
 			}
+			
+			
 			
 
 		}else{//如果不是本月的，就直接隐藏

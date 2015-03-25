@@ -15,6 +15,10 @@ public class Constants {
 	public static String SETTING_EMAIL = "manager.php?action=email&";// email=222@163.com
 	public static String SETTING_PWD = "manager.php?action=pwd&";// pwd=addd
 	public static String SEARCHRECORD = "position.php?action=search&";
+	
+	//SD卡文件
+	public static String USERINFOPATH = "userInfo.txt";
+	public static String USERINFOISFIRSTLOGIN = "firstLogin.txt";
 
 	//拼接用于调用接口的网址
 	public static String LocalLoginUrl = LOCALHOST + LOGIN;

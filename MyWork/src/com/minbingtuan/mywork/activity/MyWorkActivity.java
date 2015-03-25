@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
@@ -166,6 +167,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		params.put("position", myApp.getGpsAddr());
 		String url = Constants.LocalTIMEUrl;
 		url += StringUtils.encodeUrl(params);
+		LogHelper.trace("签到请求：>>>"+url);
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
 				new Response.Listener<JSONObject>() {
 
@@ -297,7 +299,6 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		params.put("today", DateUtils.getDate());
 		String url = Constants.localSEARCHREAORD;
 		url += StringUtils.encodeUrl(params);
-		LogHelper.trace(url);
 
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
 				new Response.Listener<JSONObject>() {
@@ -308,6 +309,12 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 						/**
 						 * 这里需要获取一个签到信息的时间
 						 * 设置amDate、pmDate的时间显示
+						 */
+						String xx = "{\"success\":true,\"type1\":-1,\"amTiem\":\"08:57\",\"type2\":-1,\"pmTime\":\"18:01\"}";
+						/**
+						 * 希望获得的json字符串
+						 * 原来的->{"success":true,"type1":-1,"type2":-1}
+						 * {"success":true,"type1":-1,"amTiem":"08:57","type2":-1,"pmTime":"18:01"}
 						 */
 						
 						int type1 = response.optInt("type1");

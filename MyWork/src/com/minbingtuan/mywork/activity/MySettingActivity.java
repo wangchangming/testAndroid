@@ -127,6 +127,7 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		mPassWord.setOnClickListener(this);
 		reSetPwd.setOnClickListener(this);
 		topImg.setOnClickListener(this);
+		findViewById(R.id.RelativeLayout07).setOnClickListener(this);
 
 	}
 
@@ -144,8 +145,13 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				//如果点击了退出程序，则把缓存清除
+				String uName = shared.getString("uName", "");
+				String uPwd = shared.getString("uPwd", "");
 				Editor edit = shared.edit();
 				edit.clear();
+				edit.putString("uName", uName);
+				edit.putString("uPwd", uPwd);
+				edit.putBoolean("namePwd", false);
 				edit.putBoolean("isFirstLogin", true);//表示非首次登录
 				edit.commit();
 				
@@ -539,6 +545,9 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 			break;
 		case R.id.imageView2:
 			LogHelper.toast(this, "该功能正在开发，敬请期待。。。");
+			break;
+		case R.id.RelativeLayout07:
+			startActivity(new Intent(MySettingActivity.this, AboutOurActivity.class));
 			break;
 		default:
 			break;
