@@ -33,4 +33,7 @@ public class Constants {
 	public static String localSETTINGEMAIL = LOCALHOST + SETTING_EMAIL;
 	public static String localSETTINGPWD = LOCALHOST + SETTING_PWD;
 	public static String localSEARCHREAORD = LOCALHOST + SEARCHRECORD;
+	
+	//短信接口请求网址
+	public static String SMSURL = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
 }

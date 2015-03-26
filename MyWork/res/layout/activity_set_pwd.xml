@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/loginbackground"
+    android:clickable="true" >
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    	android:orientation="vertical"
+        >
+        <EditText 
+	        android:id="@+id/pwd"
+	        android:layout_width="match_parent"
+	        android:layout_height="40dp"
+	        android:layout_margin="15dp"
+	        android:background="@color/white"
+	        android:paddingLeft="10dp"
+	        android:hint="@string/EnterNewPassWord"
+	        android:singleLine="true"
+	        android:inputType="phone"
+	        android:textColor="@color/buttonTextDefault"
+	        android:textColorHint="@color/buttonTextHint"/>
+	    <EditText 
+	        android:id="@+id/confirmpwd"
+	        android:layout_width="match_parent"
+	        android:layout_height="40dp"
+	        android:layout_margin="15dp"
+	        android:paddingLeft="10dp"
+	        android:background="@color/white"
+	        android:ems="16"
+	        android:singleLine="true"
+	        android:hint="@string/EnterThePasswordAgain"
+	        android:inputType="number"
+	        android:textColor="@color/buttonTextDefault"
+	        android:textColorHint="@color/buttonTextHint"/>
+    </LinearLayout>
+    <LinearLayout 
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+	    android:layout_margin="15dp"
+        android:orientation="horizontal">
+        <Button 
+            android:id="@+id/returnbtn"
+            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+	        android:background="@drawable/text_color_bg"
+            android:text="@string/cancel"
+	        android:textColor="@color/white"
+	        android:textSize="18sp"/>
+        <Button 
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="2"
+	        android:background="@drawable/text_color_bg"
+            android:text="@string/determine"
+	        android:textColor="@color/white"
+	        android:textSize="18sp"/>
+    </LinearLayout>
+    
+
+</RelativeLayout>

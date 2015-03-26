@@ -1,8 +1,5 @@
 package com.minbingtuan.mywork.activity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -13,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.LogHelper;
@@ -60,6 +56,9 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 		
 		
 		myApp = (MyApplication) getApplication();
+		
+		//打印手机串号
+		LogHelper.trace(SDCardUtil.getMIEI(getWindow().getContext()));
 
 		//这里判断用户的登录的状态
 		if (MyApplication.getLoginStatus()) {
@@ -86,6 +85,7 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 		checkBox = (CheckBox) findViewById(R.id.check);
 		buttonLogin.setOnClickListener(this);
 		buttonRegister.setOnClickListener(this);
+		findViewById(R.id.buttonforget).setOnClickListener(this);
 		
 		isFirstLogin = shared.getBoolean("isFirstLogin", false);
 		if(isFirstLogin){//如果是非首次进入应用
@@ -110,7 +110,6 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 			Editor edit = shared.edit();
 			edit.putBoolean("isFirstLogin", true);//表示非首次登录
 			edit.commit();
-			SDCardUtil.writeSD("first", Constants.USERINFOISFIRSTLOGIN);
 		}
 	}
 	
@@ -166,8 +165,6 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 								StringUtils.userName = userName;
 								StringUtils.password = pwd; 
 								
-								//把用户名写入SD中
-								SDCardUtil.writeSD(userName,Constants.USERINFOPATH);
 								
 							}
 							
@@ -242,10 +239,7 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 				Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
 				return;
 			}
-			if(!mUserName.equals(SDCardUtil.readSD(Constants.USERINFOPATH))){
-				LogHelper.toast(MyLoginActivity.this, "请用自己的账号登陆，谢谢！"+SDCardUtil.readSD(Constants.USERINFOPATH));
-				return;
-			}
+			
 			HttpGetRequestLogin(mUserName, mPassWord);
 			dialog = CustomProgress.show(MyLoginActivity.this, getString(R.string.is_logining), true, null);
 			break;
@@ -255,6 +249,9 @@ public class MyLoginActivity extends Activity implements OnClickListener{
 			intent.setClass(MyLoginActivity.this, MyRegisterActivity.class);
 			startActivity(intent);
 			finish();
+			break;
+		case R.id.buttonforget:
+			startActivity(new Intent(this,BackPwdActivity.class));
 			break;
 
 		default:

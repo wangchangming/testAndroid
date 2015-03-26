@@ -7,54 +7,69 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
- * 把文件存入SD卡中
- * @author zjlong
+ * @author wching
  *
  */
 public class SDCardUtil {
 
-	public static void writeSD(String str,String path){
-		 try {
-	            if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-	                //获取SD卡的目录
-	                File sdCardDir = Environment.getExternalStorageDirectory();
-	                File targetFile = new File(sdCardDir.getCanonicalPath() + path);
-	                //以指定文件创建RandomAccessFile对象
-	                RandomAccessFile raf = new RandomAccessFile(targetFile, "rw");
-	                //将文件记录指针移动到最后
-	                raf.seek(targetFile.length());
-	                //输出文件内容
-	                raf.write(str.getBytes());
-	                raf.close();
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	}
-	public static String readSD(String path){
-		try {
-            if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                //获得SD卡对应的存储目录
-                File sdCardDir = Environment.getExternalStorageDirectory();
-                //获取指定文件对应的输入流
-                FileInputStream fis = new FileInputStream(sdCardDir.getCanonicalPath() + path);
-                //将指定输入流包装成BufferReader
-                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-                StringBuilder sb = new StringBuilder("");
-                String line = null;
-                //循环读取文件内容
-                while((line = br.readLine()) != null){
-                    sb.append(line);
-                }
-                br.close();
-                return sb.toString();
+	/**
+	 * 获取手机的物理地址
+     * 错误返回12个0
+     */
+    public static String getMacAddress(Context context) {
+        // 获取mac地址：
+        String macAddress = "000000000000";
+        try {
+            WifiManager wifiMgr = (WifiManager) context
+                    .getSystemService(Context.WIFI_SERVICE);
+            WifiInfo info = (null == wifiMgr ? null : wifiMgr
+                    .getConnectionInfo());
+            if (null != info) {
+                if (!TextUtils.isEmpty(info.getMacAddress()))
+                    macAddress = info.getMacAddress().replace(":", "");
+                else
+                    return macAddress;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return macAddress;
         }
-        return null;
+        return macAddress;
     }
+    
+    
+    /**
+     * 获取手机MIEI
+     * @param context
+     * @return
+     * 参考网址：http://www.cnblogs.com/fly_binbin/archive/2010/12/09/1901612.html
+     */
+    public static String getMIEI(Context context){
+    	
+
+    	 TelephonyManager telephonemanage = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);              
+
+    	   try        {     
+
+    	    return telephonemanage.getDeviceId();      
+
+    	   }    
+
+    	     catch(Exception e)        {     
+
+    	    Log.i("error", e.getMessage());  
+
+    	       }
+    	return "";
+    }
+
 }

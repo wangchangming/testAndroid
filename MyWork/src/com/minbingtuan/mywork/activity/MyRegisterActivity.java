@@ -27,6 +27,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyRegisterActivity extends Activity implements OnClickListener {
@@ -37,7 +38,7 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 	private EditText EditTextPassWord = null;
 	private EditText EditTextConfirmPassWord = null;
 	private EditText EditTextTel = null;
-	private Button ButtonGroup = null;
+	private TextView ButtonGroup = null;
 	private EditText EditTextemail = null;
 	private Button ButtonRegister = null;
 
@@ -56,14 +57,14 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_register);
+		setContentView(R.layout.activity_register_account);
 		myApp = (MyApplication) getApplication();
 
 		EditTextName = (EditText) findViewById(R.id.editTextusername);
 		EditTextPassWord = (EditText) findViewById(R.id.editTextuserpassword);
 		EditTextConfirmPassWord = (EditText) findViewById(R.id.editTextConfirmPassWord);
 		EditTextemail = (EditText) findViewById(R.id.editTextEmail);
-		ButtonGroup = (Button) findViewById(R.id.ButtonGroup);
+		ButtonGroup = (TextView) findViewById(R.id.ButtonGroup);
 		EditTextTel = (EditText) findViewById(R.id.editTextTel);
 
 		ButtonRegister = (Button) findViewById(R.id.buttonregister);
