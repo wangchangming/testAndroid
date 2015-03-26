@@ -67,7 +67,15 @@
             android:screenOrientation="nosensor"
             android:theme="@style/Theme" />
         <activity
+            android:name="com.minbingtuan.mywork.activity.BackPwdActivity"
+            android:screenOrientation="nosensor"
+            android:theme="@style/Theme" />
+        <activity
             android:name="com.minbingtuan.mywork.activity.MyChangePwdActivity"
+            android:screenOrientation="nosensor"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="com.minbingtuan.mywork.activity.SetPwdActivity"
             android:screenOrientation="nosensor"
             android:theme="@style/Theme" />
 

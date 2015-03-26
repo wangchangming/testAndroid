@@ -21,9 +21,11 @@ import com.minbingtuan.mywork.utils.Setting;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 import com.minbingtuan.mywork.view.CustomProgress;
+import com.minbingtuan.mywork.view.NetDialog;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -73,57 +75,68 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_work);
 		
-		//获取数据对话框
-		dialog = CustomProgress.show(MyWorkActivity.this, getString(R.string.getData), true, null);
+        myApp = (MyApplication) getApplication();
 		
-		shared = getSharedPreferences("sign_message", Activity.MODE_PRIVATE);
-		shareUserInfo = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
-		Setting.autoLogin = shareUserInfo.getBoolean("autoLogin", false);
-		myApp = (MyApplication) getApplication();
-
-
-		RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.layoutTitle);
-		buttonSearch = (RadioButton) titleLayout.findViewById(R.id.buttonSearch);
-		buttonSetting = (RadioButton) titleLayout.findViewById(R.id.buttonSetting);
-		mRadioGroup = (RadioGroup) titleLayout.findViewById(R.id.main_radio);
-		buttonWorkOn = (ImageButton) findViewById(R.id.ButtonWorkOn);
-		buttonWorkOff = (ImageButton) findViewById(R.id.ButtonWorkOff);
-		mTextTime = (TextView) findViewById(R.id.TextView08);
-		mLocation = (TextView) findViewById(R.id.textView1);
-		mUserName = (TextView) findViewById(R.id.TextViewName);
-		Date = (TextView) findViewById(R.id.TextViewDate);
-		amDate = (TextView) findViewById(R.id.TextView04);
-		pmDate = (TextView) findViewById(R.id.TextView07);
-		TextPaint tp = mUserName.getPaint();
-		tp.setFakeBoldText(true);
-
-		mRadioGroup.check(curCheckId);
-
-		if(Setting.autoLogin){
-			//从缓存中取出用户名
-			String userName = shareUserInfo.getString("uRealName", "");
-			userID = shareUserInfo.getInt("uId", 0);
-			mUserName.setText(userName.equals("null")? "" : userName);
-		}else{
-			//从Application中取出用户名
-			userID = myApp.getUserId();//获取用户ID号
-			mUserName.setText(myApp.getRealName().equals("null") ? "" : myApp.getRealName());
-		}
-		Date.setText(DateUtils.getDate());
-		buttonSearch.setOnClickListener(this);
-		buttonSetting.setOnClickListener(this);
-		buttonWorkOn.setOnClickListener(this);
-		buttonWorkOff.setOnClickListener(this);
+        // 判断手机是否连接网络
+        if (!myApp.isConnect()) {// 如果没有连接网络
+            Dialog dialog = new NetDialog(this, R.style.MyDialog);
+            dialog.show();
+        }else{
+            init();
+        }
 		
-
-		//这里activity每次进入都得重新调用一次服务器
-		HttpGetSearchRecord();
 		
-		//每隔30秒更新一次UI主界面
-		myHandler.sendEmptyMessage(TIME_UPDATE_UI);
 	}
 
-	
+	public void init(){
+	    //获取数据对话框
+        dialog = CustomProgress.show(MyWorkActivity.this, getString(R.string.getData), true, null);
+        
+        shared = getSharedPreferences("sign_message", Activity.MODE_PRIVATE);
+        shareUserInfo = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
+        Setting.autoLogin = shareUserInfo.getBoolean("autoLogin", false);
+
+
+        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.layoutTitle);
+        buttonSearch = (RadioButton) titleLayout.findViewById(R.id.buttonSearch);
+        buttonSetting = (RadioButton) titleLayout.findViewById(R.id.buttonSetting);
+        mRadioGroup = (RadioGroup) titleLayout.findViewById(R.id.main_radio);
+        buttonWorkOn = (ImageButton) findViewById(R.id.ButtonWorkOn);
+        buttonWorkOff = (ImageButton) findViewById(R.id.ButtonWorkOff);
+        mTextTime = (TextView) findViewById(R.id.TextView08);
+        mLocation = (TextView) findViewById(R.id.textView1);
+        mUserName = (TextView) findViewById(R.id.TextViewName);
+        Date = (TextView) findViewById(R.id.TextViewDate);
+        amDate = (TextView) findViewById(R.id.TextView04);
+        pmDate = (TextView) findViewById(R.id.TextView07);
+        TextPaint tp = mUserName.getPaint();
+        tp.setFakeBoldText(true);
+
+        mRadioGroup.check(curCheckId);
+
+        if(Setting.autoLogin){
+            //从缓存中取出用户名
+            String userName = shareUserInfo.getString("uRealName", "");
+            userID = shareUserInfo.getInt("uId", 0);
+            mUserName.setText(userName.equals("null")? "" : userName);
+        }else{
+            //从Application中取出用户名
+            userID = myApp.getUserId();//获取用户ID号
+            mUserName.setText(myApp.getRealName().equals("null") ? "" : myApp.getRealName());
+        }
+        Date.setText(DateUtils.getDate());
+        buttonSearch.setOnClickListener(this);
+        buttonSetting.setOnClickListener(this);
+        buttonWorkOn.setOnClickListener(this);
+        buttonWorkOff.setOnClickListener(this);
+        
+
+        //这里activity每次进入都得重新调用一次服务器
+        HttpGetSearchRecord();
+        
+        //每隔30秒更新一次UI主界面
+        myHandler.sendEmptyMessage(TIME_UPDATE_UI);
+	}
 	/**
 	 * 菜单、返回键响应
 	 */

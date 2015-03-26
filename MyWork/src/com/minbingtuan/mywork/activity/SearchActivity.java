@@ -7,10 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.json.JSONObject;
-
 import com.google.gson.Gson;
+import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.model.DayOfMonth;
 import com.minbingtuan.mywork.utils.CalendarAdapter;
@@ -19,6 +18,7 @@ import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.SpecialCalendar;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.view.MyGridView;
+import com.minbingtuan.mywork.view.NetDialog;
 import com.minbingtuan.mywork.wheel.StrericWheelAdapter;
 import com.minbingtuan.mywork.wheel.WheelView;
 
@@ -118,8 +118,8 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 			{"22","08:54","17:55"},
 			{"23","08:47","17:22"},
 			{"24","09:00","18:30"},
-			{"25","08:55",""},
-			{"26","",""},
+			{"25","08:55","17:45"},
+			{"26","08:50",""},
 			{"27","",""},
 			{"28","",""},
 			{"29","",""},
@@ -145,6 +145,14 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_calendar_table);
+		
+		MyApplication myApp = (MyApplication) getApplication();
+        
+        // 判断手机是否连接网络
+        if (!myApp.isConnect()) {// 如果没有连接网络
+            Dialog dialog = new NetDialog(this, R.style.MyDialog);
+            dialog.show();
+        }
 		
 		list = new ArrayList<DayOfMonth>();
 		sc = new SpecialCalendar();

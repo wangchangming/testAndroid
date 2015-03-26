@@ -18,6 +18,7 @@ import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.Setting;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
+import com.minbingtuan.mywork.view.NetDialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -81,6 +82,12 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 		shared = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
 		myApp = (MyApplication) getApplication();
+		
+		// 判断手机是否连接网络
+        if (!myApp.isConnect()) {// 如果没有连接网络
+            Dialog dialog = new NetDialog(this, R.style.MyDialog);
+            dialog.show();
+        }
 
 		RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.layoutTitle);
 		buttonSearch = (RadioButton) titleLayout.findViewById(R.id.buttonSearch);

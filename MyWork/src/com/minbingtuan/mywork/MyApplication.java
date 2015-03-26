@@ -1,5 +1,5 @@
-package com.minbingtuan.mywork;
 
+package com.minbingtuan.mywork;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,244 +12,289 @@ import android.net.NetworkInfo;
 
 public class MyApplication extends Application {
 
-	public static String LOCALHOST = "http://www.minbingtuan.cn:8088/api/";
-	public static String LOGIN = "function.php?action=login&";
-	public static String REGISTER = "function.php?action=register&";
-	public static String GROUP = "function.php?action=group";
-	public static String ADD_POSITION = "position.php?action=add&";
-	public static String GET_POSITION = "position.php?action=get&type=1&";
-	public static String SETTING_NAME = "manager.php?action=name&";// name=whui&managerId=
-	public static String SETTING_MOBILE = "manager.php?action=mobile&";// mobile=1432
-	public static String SETTING_BIRTHDAY = "manager.php?action=birthday&";// birthday=1980-01-19
-	public static String SETTING_EMAIL = "manager.php?action=email&";// email=222@163.com
-	public static String SETTING_PWD = "manager.php?action=pwd&";// pwd=addd
-	public static String SEARCHRECORD = "position.php?action=search&";
+    public static String LOCALHOST = "http://www.minbingtuan.cn:8088/api/";
 
-	public static String LocalLoginUrl = LOCALHOST + LOGIN;
-	public static String LocalRegisterUrl = LOCALHOST + REGISTER;
-	public static String LocalReportUrl = LOCALHOST + ADD_POSITION;
-	public static String LocalGroupUrl = LOCALHOST + GROUP;
-	public static String LocalTIMEUrl = LOCALHOST + ADD_POSITION;
-	public static String LocalGETTIMEUrl = LOCALHOST + GET_POSITION;
-	public static String localSETTINGNAME = LOCALHOST + SETTING_NAME;
-	public static String localSETTINGMOBILE = LOCALHOST + SETTING_MOBILE;
-	public static String localSETTINGBIRTHDAY = LOCALHOST + SETTING_BIRTHDAY;
-	public static String localSETTINGEMAIL = LOCALHOST + SETTING_EMAIL;
-	public static String localSETTINGPWD = LOCALHOST + SETTING_PWD;
-	public static String localSEARCHREAORD = LOCALHOST + SEARCHRECORD;
+    public static String LOGIN = "function.php?action=login&";
 
-	private userInfo myUserInfo = new userInfo();
-	private static boolean isLogin = false;
-	private static boolean isPosition = false;
+    public static String REGISTER = "function.php?action=register&";
 
-	public void onCreate() {
-		super.onCreate();
-	}
+    public static String GROUP = "function.php?action=group";
 
-	/**
-	 * 判断网络是否连接
-	 * @return boolean
-	 */
-	public boolean isConnect() {
-		ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (connectivity != null) {
-			NetworkInfo info = connectivity.getActiveNetworkInfo();
-			if (info != null && info.isConnected()) {
-				if (info.getState() == NetworkInfo.State.CONNECTED) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    public static String ADD_POSITION = "position.php?action=add&";
 
-	/**
-	 * 启动GPS服务
-	 */
-	public void startGPSService() {
-		Intent gpsIntent = new Intent();
-		gpsIntent.setClassName(MyApplication.this, "com.minbingtuan.mywork.service.MyAMapGpsService");
-		startService(gpsIntent);
-	}
+    public static String GET_POSITION = "position.php?action=get&type=1&";
 
-	
-	/**
-	 * 关闭GPS服务
-	 */
-	public void stopGPSService() {
-		Intent gpsIntent = new Intent();
-		gpsIntent.setClassName(MyApplication.this, "com.minbingtuan.mywork.service.MyAMapGpsService");
-		stopService(gpsIntent);
-	}
+    public static String SETTING_NAME = "manager.php?action=name&";// name=whui&managerId=
 
-	/**
-	 * 启动位置服务
-	 */
-	public void startPositonService() {
-		if (isPosition) {
-			return;
-		}
-		isPosition = true;
-		Intent posIntent = new Intent();
-		posIntent.setClassName(MyApplication.this, "com.minbingtuan.mywork.service.MyPositonService");
-		startService(posIntent);
-	}
+    public static String SETTING_MOBILE = "manager.php?action=mobile&";// mobile=1432
 
-	/**
-	 * 关闭位置服务
-	 */
-	public void stopPositonService() {
-		if (!isPosition) {
-			return;
-		}
-		isPosition = false;
-		Intent posIntent = new Intent();
-		posIntent.setClassName(MyApplication.this, "com.minbingtuan.mywork.service.MyPositonService");
-		stopService(posIntent);
-	}
+    public static String SETTING_BIRTHDAY = "manager.php?action=birthday&";// birthday=1980-01-19
 
-	/**
-	 * 设置用户信息 
-	 * @param id
-	 * @param userName
-	 * @param realName
-	 * @param mobile
-	 * @param email
-	 * @param groupId
-	 * @param password
-	 * @param birthday
-	 * @param groupName
-	 */
-	public void setUserInfo(int id, String userName, String realName, String mobile, String email, int groupId,
-			String password, String birthday, String groupName) {
-		myUserInfo.id = id;
-		myUserInfo.userName = userName;
-		myUserInfo.realName = realName;
-		myUserInfo.password = password;
-		myUserInfo.mobile = mobile;
-		myUserInfo.email = email;
-		myUserInfo.groupId = groupId;
-		myUserInfo.birthday = birthday;
-		myUserInfo.groupName = groupName;
-		
-		
-	}
+    public static String SETTING_EMAIL = "manager.php?action=email&";// email=222@163.com
 
-	public int getUserId() {
-		return myUserInfo.id;
-	}
+    public static String SETTING_PWD = "manager.php?action=pwd&";// pwd=addd
 
-	public String getUserName() {
-		return myUserInfo.userName;
-	}
+    public static String SEARCHRECORD = "position.php?action=search&";
 
-	public String getRealName() {
-		return myUserInfo.realName;
-	}
+    public static String LocalLoginUrl = LOCALHOST + LOGIN;
 
-	public void setRealName(String realName) {
-		myUserInfo.realName = realName;
-	}
+    public static String LocalRegisterUrl = LOCALHOST + REGISTER;
 
-	public String getUserMobile() {
-		return myUserInfo.mobile;
-	}
+    public static String LocalReportUrl = LOCALHOST + ADD_POSITION;
 
-	public void setUserMobile(String mobile) {
-		myUserInfo.mobile = mobile;
-	}
+    public static String LocalGroupUrl = LOCALHOST + GROUP;
 
-	public String getUserBirthday() {
-		return myUserInfo.birthday;
-	}
+    public static String LocalTIMEUrl = LOCALHOST + ADD_POSITION;
 
-	public void setUserBirthday(String birthday) {
-		myUserInfo.birthday = birthday;
-	}
+    public static String LocalGETTIMEUrl = LOCALHOST + GET_POSITION;
 
-	public String getUserEmail() {
-		return myUserInfo.email;
-	}
+    public static String localSETTINGNAME = LOCALHOST + SETTING_NAME;
 
-	public void setUserEmail(String email) {
-		myUserInfo.email = email;
-	}
+    public static String localSETTINGMOBILE = LOCALHOST + SETTING_MOBILE;
 
-	public String getUserGroupName() {
-		return myUserInfo.groupName;
-	}
+    public static String localSETTINGBIRTHDAY = LOCALHOST + SETTING_BIRTHDAY;
 
-	public void setUserGroupName(String groupName) {
-		myUserInfo.groupName = groupName;
-	}
+    public static String localSETTINGEMAIL = LOCALHOST + SETTING_EMAIL;
 
-	public String getUserPassWord() {
-		return myUserInfo.password;
-	}
+    public static String localSETTINGPWD = LOCALHOST + SETTING_PWD;
 
-	public void setUserPassWord(String password) {
-		myUserInfo.password = password;
-	}
+    public static String localSEARCHREAORD = LOCALHOST + SEARCHRECORD;
 
-	public void setLoginStatus(boolean status) {
-		isLogin = status;
-	}
+    private userInfo myUserInfo = new userInfo();
 
-	public static boolean getLoginStatus() {
-		return isLogin;
-	}
+    private static boolean isLogin = false;
 
-	class userInfo {
-		int id;
-		String userName;
-		String realName;
-		String password;
-		String mobile;
-		String email;
-		String pwd;
-		String birthday;
-		int groupId;
-		String groupName;
-		String sex;
-		String showCustomMobile;
-		String showMemberMobile;
-		String idNumber;
-		String status;
-	}
+    private static boolean isPosition = false;
 
-	private gpsInfo myGpsInfo = new gpsInfo();
+    public void onCreate() {
+        super.onCreate();
+    }
 
-	/**
-	 * 设置地理位置信息
-	 * @param addr  地址信息
-	 * @param lon   经度
-	 * @param lat   纬度
-	 */
-	public void setGpsInfo(String addr, double lon, double lat) {
-		myGpsInfo.address = addr;
-		myGpsInfo.longitude = lon;//经度
-		myGpsInfo.latitude = lat;//纬度
-	}
+    /**
+     * 判断网络是否连接
+     * 
+     * @return boolean
+     */
+    public boolean isConnect() {
+        ConnectivityManager connectivity = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                if (info.getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	public String getGpsAddr() {
-		return myGpsInfo.address;
-	}
+    /**
+     * 启动GPS服务
+     */
+    public void startGPSService() {
+        Intent gpsIntent = new Intent();
+        gpsIntent.setClassName(MyApplication.this,
+                "com.minbingtuan.mywork.service.MyAMapGpsService");
+        startService(gpsIntent);
+    }
 
-	public double getGpsLongitude() {
-		return myGpsInfo.longitude;
-	}
+    /**
+     * 关闭GPS服务
+     */
+    public void stopGPSService() {
+        Intent gpsIntent = new Intent();
+        gpsIntent.setClassName(MyApplication.this,
+                "com.minbingtuan.mywork.service.MyAMapGpsService");
+        stopService(gpsIntent);
+    }
 
-	public double getGpsLatitude() {
-		return myGpsInfo.latitude;
-	}
+    /**
+     * 启动位置服务
+     */
+    public void startPositonService() {
+        if (isPosition) {
+            return;
+        }
+        isPosition = true;
+        Intent posIntent = new Intent();
+        posIntent.setClassName(MyApplication.this,
+                "com.minbingtuan.mywork.service.MyPositonService");
+        startService(posIntent);
+    }
 
-	class gpsInfo {
-		String address;
-		double longitude;
-		double latitude;
-	}
-	
-	public static void exitMe() {
+    /**
+     * 关闭位置服务
+     */
+    public void stopPositonService() {
+        if (!isPosition) {
+            return;
+        }
+        isPosition = false;
+        Intent posIntent = new Intent();
+        posIntent.setClassName(MyApplication.this,
+                "com.minbingtuan.mywork.service.MyPositonService");
+        stopService(posIntent);
+    }
+
+    /**
+     * 设置用户信息
+     * 
+     * @param id
+     * @param userName
+     * @param realName
+     * @param mobile
+     * @param email
+     * @param groupId
+     * @param password
+     * @param birthday
+     * @param groupName
+     */
+    public void setUserInfo(int id, String userName, String realName, String mobile, String email,
+            int groupId, String password, String birthday, String groupName) {
+        myUserInfo.id = id;
+        myUserInfo.userName = userName;
+        myUserInfo.realName = realName;
+        myUserInfo.password = password;
+        myUserInfo.mobile = mobile;
+        myUserInfo.email = email;
+        myUserInfo.groupId = groupId;
+        myUserInfo.birthday = birthday;
+        myUserInfo.groupName = groupName;
+
+    }
+
+    public int getUserId() {
+        return myUserInfo.id;
+    }
+
+    public String getUserName() {
+        return myUserInfo.userName;
+    }
+
+    public String getRealName() {
+        return myUserInfo.realName;
+    }
+
+    public void setRealName(String realName) {
+        myUserInfo.realName = realName;
+    }
+
+    public String getUserMobile() {
+        return myUserInfo.mobile;
+    }
+
+    public void setUserMobile(String mobile) {
+        myUserInfo.mobile = mobile;
+    }
+
+    public String getUserBirthday() {
+        return myUserInfo.birthday;
+    }
+
+    public void setUserBirthday(String birthday) {
+        myUserInfo.birthday = birthday;
+    }
+
+    public String getUserEmail() {
+        return myUserInfo.email;
+    }
+
+    public void setUserEmail(String email) {
+        myUserInfo.email = email;
+    }
+
+    public String getUserGroupName() {
+        return myUserInfo.groupName;
+    }
+
+    public void setUserGroupName(String groupName) {
+        myUserInfo.groupName = groupName;
+    }
+
+    public String getUserPassWord() {
+        return myUserInfo.password;
+    }
+
+    public void setUserPassWord(String password) {
+        myUserInfo.password = password;
+    }
+
+    public void setLoginStatus(boolean status) {
+        isLogin = status;
+    }
+
+    public static boolean getLoginStatus() {
+        return isLogin;
+    }
+
+    class userInfo {
+        int id;
+
+        String userName;
+
+        String realName;
+
+        String password;
+
+        String mobile;
+
+        String email;
+
+        String pwd;
+
+        String birthday;
+
+        int groupId;
+
+        String groupName;
+
+        String sex;
+
+        String showCustomMobile;
+
+        String showMemberMobile;
+
+        String idNumber;
+
+        String status;
+    }
+
+    private gpsInfo myGpsInfo = new gpsInfo();
+
+    /**
+     * 设置地理位置信息
+     * 
+     * @param addr 地址信息
+     * @param lon 经度
+     * @param lat 纬度
+     */
+    public void setGpsInfo(String addr, double lon, double lat) {
+        myGpsInfo.address = addr;
+        myGpsInfo.longitude = lon;// 经度
+        myGpsInfo.latitude = lat;// 纬度
+    }
+
+    public String getGpsAddr() {
+        return myGpsInfo.address;
+    }
+
+    public double getGpsLongitude() {
+        return myGpsInfo.longitude;
+    }
+
+    public double getGpsLatitude() {
+        return myGpsInfo.latitude;
+    }
+
+    class gpsInfo {
+        String address;
+
+        double longitude;
+
+        double latitude;
+    }
+
+    public static void exitMe() {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -257,8 +302,8 @@ public class MyApplication extends Application {
             }
         }, 1000);
     }
-	
-	private static void exit() {
+
+    private static void exit() {
         // 杀进程
         int pid = android.os.Process.myPid();
         android.os.Process.killProcess(pid);
