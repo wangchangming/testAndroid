@@ -158,8 +158,7 @@ public class MyLoginActivity extends Activity implements OnClickListener {
                             String email = jobj.optString("email");
                             String birthday = jobj.optString("birthday");
                             String groupName = jobj.optString("groupName");
-                            // MyApplication myApp = (MyApplication)
-                            // getApplication();
+                            
                             myApp.setUserInfo(id, userName, realName, mobile, email, groupId, pwd,
                                     birthday, groupName);
                             myApp.startGPSService();

@@ -68,6 +68,7 @@
     <string name="erroe_smscoe">验证码输入错误！</string>
     <string name="time_re_get">秒后重新获取</string>
     <string name="time_out_sms">短信验证码已失效，请重新获取！</string>
+    <string name="net_discon">网络连接不可用，是否进行设置？</string>
 
     <!-- 退出 -->
     <string name="Sure_you_want_to_quit">确定要退出吗?</string>
@@ -91,7 +92,7 @@
     <string name="Head_portrait">设置头像</string>
     <string name="AboutUs">关于我们</string>
     <string name="Feedback">意见反馈</string>
-    <string name="ExitTheApp">退出程序</string>
+    <string name="ExitTheApp">退出当前登录状态</string>
     <string name="ResetPassWord">重置密码</string>
     <string name="SelectBirthdayTime">选择出生日期</string>
     <string name="NoFoundSDCard">未找到存储卡，无法存储照片！</string>

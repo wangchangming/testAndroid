@@ -92,6 +92,7 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 	private SpecialCalendar sc = null;
 	
 	private DayOfMonth day;
+	private MyApplication myApp;
     
     String [][]test = {
 			{"1","09:55","18:01"},
@@ -119,8 +120,8 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 			{"23","08:47","17:22"},
 			{"24","09:00","18:30"},
 			{"25","08:55","17:45"},
-			{"26","08:50",""},
-			{"27","",""},
+			{"26","08:50","18:22"},
+			{"27","08:50",""},
 			{"28","",""},
 			{"29","",""},
 			{"30","",""},
@@ -146,13 +147,8 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_calendar_table);
 		
-		MyApplication myApp = (MyApplication) getApplication();
+		myApp = (MyApplication) getApplication();
         
-        // 判断手机是否连接网络
-        if (!myApp.isConnect()) {// 如果没有连接网络
-            Dialog dialog = new NetDialog(this, R.style.MyDialog);
-            dialog.show();
-        }
 		
 		list = new ArrayList<DayOfMonth>();
 		sc = new SpecialCalendar();
@@ -200,6 +196,16 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
         addGridView();  
         gridView.setAdapter(calV);  
         
+		
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+        // 判断手机是否连接网络
+        if (!myApp.isConnect()) {// 如果没有连接网络
+            Dialog dialog = new NetDialog(this, R.style.MyDialog);
+            dialog.show();
+        }
 		
 	}
 	public void init(){

@@ -82,12 +82,6 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 
 		shared = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
 		myApp = (MyApplication) getApplication();
-		
-		// 判断手机是否连接网络
-        if (!myApp.isConnect()) {// 如果没有连接网络
-            Dialog dialog = new NetDialog(this, R.style.MyDialog);
-            dialog.show();
-        }
 
 		RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.layoutTitle);
 		buttonSearch = (RadioButton) titleLayout.findViewById(R.id.buttonSearch);
@@ -136,6 +130,17 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		topImg.setOnClickListener(this);
 		findViewById(R.id.RelativeLayout07).setOnClickListener(this);
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// 判断手机是否连接网络
+        if (!myApp.isConnect()) {// 如果没有连接网络
+            Dialog dialog = new NetDialog(this, R.style.MyDialog);
+            dialog.show();
+        }
+		
 	}
 
 	@Override

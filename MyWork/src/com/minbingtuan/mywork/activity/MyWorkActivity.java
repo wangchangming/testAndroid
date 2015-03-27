@@ -69,7 +69,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	private SharedPreferences shared;
 	SharedPreferences shareUserInfo;
 	private int userID;
-	private CustomProgress dialog;
+	private CustomProgress dialogProgress;
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -77,20 +77,24 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		
         myApp = (MyApplication) getApplication();
 		
-        // 判断手机是否连接网络
+        init();
+		
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// 判断手机是否连接网络
         if (!myApp.isConnect()) {// 如果没有连接网络
             Dialog dialog = new NetDialog(this, R.style.MyDialog);
             dialog.show();
         }else{
-            init();
+            //这里activity每次进入都得重新调用一次服务器
+            HttpGetSearchRecord();
         }
-		
-		
 	}
 
 	public void init(){
-	    //获取数据对话框
-        dialog = CustomProgress.show(MyWorkActivity.this, getString(R.string.getData), true, null);
         
         shared = getSharedPreferences("sign_message", Activity.MODE_PRIVATE);
         shareUserInfo = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
@@ -131,8 +135,6 @@ public class MyWorkActivity extends Activity implements OnClickListener {
         buttonWorkOff.setOnClickListener(this);
         
 
-        //这里activity每次进入都得重新调用一次服务器
-        HttpGetSearchRecord();
         
         //每隔30秒更新一次UI主界面
         myHandler.sendEmptyMessage(TIME_UPDATE_UI);
@@ -299,6 +301,9 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	 * 启动界面的时候，发送Http请求。从服务器获取签到数据
 	 */
 	public void HttpGetSearchRecord() {
+	    //获取数据对话框
+		dialogProgress = CustomProgress.show(MyWorkActivity.this, getString(R.string.getData), true, null);
+		
 		RequestQueue queue = Volley.newRequestQueue(this);
 		HashMap<String, String> params = new HashMap<String, String>();
 		
@@ -340,7 +345,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 							buttonWorkOff.setClickable(false);
 							buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
 						}
-						dialog.dismiss();
+						dialogProgress.dismiss();
 					}
 
 				}, new Response.ErrorListener() {
@@ -350,7 +355,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 						Toast.makeText(getApplicationContext(),
 								VolleyErrorHelper.handleServerError(error, getApplication()), Toast.LENGTH_SHORT)
 								.show();
-						dialog.dismiss();
+						dialogProgress.dismiss();
 					}
 				});
 		queue.add(jsObjectRequest);
