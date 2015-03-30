@@ -20,13 +20,19 @@ public class DateUtils {
 	}
 
 	public static String getDate() {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date curDate = new Date(System.currentTimeMillis());
 		String str = formatter.format(curDate);
 		return str;
 	}
 	public static String getMonth() {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+		Date curDate = new Date(System.currentTimeMillis());
+		String str = formatter.format(curDate);
+		return str;
+	}
+	public static String getTime() {
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 		Date curDate = new Date(System.currentTimeMillis());
 		String str = formatter.format(curDate);
 		return str;

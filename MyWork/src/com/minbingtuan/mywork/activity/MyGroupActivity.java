@@ -2,8 +2,10 @@ package com.minbingtuan.mywork.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -13,7 +15,9 @@ import com.android.volley.toolbox.Volley;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.model.MyGroupModel;
+import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -112,6 +116,7 @@ public class MyGroupActivity extends Activity implements OnClickListener {
 	public void init() {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		String url = MyApplication.LocalGroupUrl;
+		LogHelper.trace(url);
 
 		JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
 				new Response.Listener<JSONObject>() {

@@ -163,13 +163,13 @@ public class MyLoginActivity extends Activity implements OnClickListener {
                                     birthday, groupName);
                             myApp.startGPSService();
                             myApp.setLoginStatus(true);
+                            Editor edit = shared.edit();
+                            edit.putString("uName", userName);
 
                             if (checkBox.isChecked()) {
                                 // 如果选择了自动登录，则把个人信息保存在本地
-                                Editor edit = shared.edit();
                                 edit.putInt("uId", id);
                                 edit.putInt("uGroupId", groupId);
-                                edit.putString("uName", userName);
                                 edit.putString("uRealName", realName);
                                 edit.putString("uPwd", pwd);
                                 edit.putString("uMobile", mobile);
@@ -178,12 +178,12 @@ public class MyLoginActivity extends Activity implements OnClickListener {
                                 edit.putString("uGroupName", groupName);
                                 edit.putBoolean("autoLogin", true);
                                 edit.putBoolean("namePwd", true);
-                                edit.commit();
 
                                 StringUtils.userName = userName;
                                 StringUtils.password = pwd;
 
                             }
+                            edit.commit();
 
                             Toast.makeText(getApplicationContext(),
                                     getString(R.string.Login_successful), Toast.LENGTH_SHORT)
@@ -266,6 +266,12 @@ public class MyLoginActivity extends Activity implements OnClickListener {
                         Toast.makeText(getApplicationContext(), getString(R.string.NetError),
                                 Toast.LENGTH_SHORT).show();
                         return;
+                    }
+                    //判断用户是否是手机当前手机绑定的用户
+                    String name = shared.getString("uName", "");
+                    if(!TextUtils.isEmpty(name)&&!name.equals(mUserName)){
+                    	LogHelper.toast(this, getString(R.string.is_me));
+                    	return;
                     }
 
                     HttpGetRequestLogin(mUserName, mPassWord);

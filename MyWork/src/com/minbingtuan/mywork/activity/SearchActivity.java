@@ -1,22 +1,40 @@
 package com.minbingtuan.mywork.activity;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.model.DayOfMonth;
 import com.minbingtuan.mywork.utils.CalendarAdapter;
 import com.minbingtuan.mywork.utils.DateUtils;
 import com.minbingtuan.mywork.utils.LogHelper;
+import com.minbingtuan.mywork.utils.Setting;
 import com.minbingtuan.mywork.utils.SpecialCalendar;
 import com.minbingtuan.mywork.utils.StringUtils;
+import com.minbingtuan.mywork.utils.VolleyErrorHelper;
+import com.minbingtuan.mywork.view.CustomProgress;
 import com.minbingtuan.mywork.view.MyGridView;
 import com.minbingtuan.mywork.view.NetDialog;
 import com.minbingtuan.mywork.wheel.StrericWheelAdapter;
@@ -26,12 +44,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
@@ -93,41 +114,11 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 	
 	private DayOfMonth day;
 	private MyApplication myApp;
-    
-    String [][]test = {
-			{"1","09:55","18:01"},
-			{"2","08:51","18:05"},
-			{"3","09:03","18:00"},
-			{"4","09:10","18:30"},
-			{"5","08:40","18:09"},
-			{"6","08:01","18:07"},
-			{"7","09:00","18:06"},
-			{"8","08:47","18:22"},
-			{"9","08:33","18:02"},
-			{"10","08:54","17:55"},
-			{"11","08:47","17:22"},
-			{"12","09:00","18:30"},
-			{"13","08:55","18:01"},
-			{"14","08:51","18:05"},
-			{"15","09:03","18:00"},
-			{"16","09:10","18:30"},
-			{"17","08:40","18:09"},
-			{"18","08:01","18:07"},
-			{"19","09:00","18:06"},
-			{"20","08:47","18:22"},
-			{"21","08:33","18:02"},
-			{"22","08:54","17:55"},
-			{"23","08:47","17:22"},
-			{"24","09:00","18:30"},
-			{"25","08:55","17:45"},
-			{"26","08:50","18:22"},
-			{"27","08:50",""},
-			{"28","",""},
-			{"29","",""},
-			{"30","",""},
-			{"31","",""}
-			};
 
+	SharedPreferences shareUserInfo;
+	ProgressDialog dialog;
+	private CustomProgress dialogProgress;
+    
 	public SearchActivity() {  
 	
 		/**
@@ -148,28 +139,14 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 		setContentView(R.layout.view_calendar_table);
 		
 		myApp = (MyApplication) getApplication();
+        shareUserInfo = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
+        
+        //获取每月签到数据
+        HttpGetMonthData(DateUtils.getMonth()+"-",year_c,month_c);
         
 		
 		list = new ArrayList<DayOfMonth>();
 		sc = new SpecialCalendar();
-		for(int i =0; i <test.length ; i++){
-			DayOfMonth day = new DayOfMonth();
-			day.setDay(test[i][0]);
-			day.setAmDate(test[i][1]);
-			day.setPmDate(test[i][2]);
-			list.add(day);
-		}
-		
-		for(int i = 0;i<list.size();i++){
-			DayOfMonth day = new DayOfMonth();
-			day = list.get(i);
-			String test = new Gson().toJson(day);
-			String str = day.getDay() +"日，早上：" +day.getAmDate()+",下午:"+day.getPmDate();
-			LogHelper.trace(str);
-			LogHelper.trace(test);
-		}
-		
-		
 //		//创建发送Bundle
 //        bd=new Bundle();//out  
 //        //获取接收参数
@@ -186,16 +163,13 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 //            System.out.println("|||||||||||"+state);  
 //          }  
           
-        gestureDetector = new GestureDetector(this);  
-        calV = new CalendarAdapter(this,getResources(),year_c,month_c,day_c,list);  
+        gestureDetector = new GestureDetector(this);
 		dayOfWeek = sc.getWeekdayOfMonth(year_c, month_c);      //某月第一天为星期几
         
         //初始化界面
 		init();
 
         addGridView();  
-        gridView.setAdapter(calV);  
-        
 		
 	}
 	@Override
@@ -279,11 +253,12 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 				LogHelper.trace((position-dayOfWeek)+"");
 				
 				day = list.get(position-dayOfWeek);
-				String am = day.getAmDate();
-				String pm = day.getPmDate();
+				String am = day.getAm();
+				String pm = day.getPm();
+				
 				
 				//判断item是否点击显示
-				if(!"".equals(am)){//在有签到信息的情况下item才可以被点击
+				if(!TextUtils.isEmpty(am)){//在有签到信息的情况下item才可以被点击
 					String rs = SearchActivity.this.getString(R.string.sign_info);
 					String txt = String.format(rs, am,pm);
 					
@@ -299,9 +274,16 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 		            popWindow.setBackgroundDrawable(new BitmapDrawable()); 
 		            //设置点击窗口外边窗口消失 
 		            popWindow.setOutsideTouchable(true); 
+		            if(popWindow.isShowing()){
+		            	calV.isSelected(35);
+		            }else{
+						calV.isSelected(position);
+		            }
 		            //规定弹窗的位置
 		            // 显示窗口 
 		            popWindow.showAsDropDown(view);
+		            
+		            
 				}
 				
 				
@@ -357,15 +339,17 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
                         public void onClick(DialogInterface dialog, int which) {
 
                             StringBuffer sb = new StringBuffer();
-                            sb.append(yearWheel.getCurrentItemValue()).append(".")
+                            sb.append(yearWheel.getCurrentItemValue()).append("-")
                                     .append(monthWheel.getCurrentItemValue());
                             curDate.setText(sb);
                 			int dYear = Integer.parseInt(yearWheel.getCurrentItemValue());
                 			int dMonth = Integer.parseInt(monthWheel.getCurrentItemValue());
-                			calV = new CalendarAdapter(SearchActivity.this,getResources(),dYear,dMonth,1,list); 
-                			dayOfWeek = sc.getWeekdayOfMonth(dYear, dMonth);      //某月第一天为星期几
-                			calV.notifyDataSetChanged();
-                			gridView.setAdapter(calV); 
+                			
+                			//更新adapter
+                	        //获取每月签到数据
+                	        HttpGetMonthData(sb+"-",dYear,dMonth);
+                			
+                			
                             dialog.cancel();
                         }
                     }).show();
@@ -399,6 +383,71 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 			StringUtils.exitBy2Click(SearchActivity.this);
 		}
 		return false;
+	}
+	
+	/**
+	 * 发送http请求，获取当月签到数据
+	 * @param date
+	 * @param dYear
+	 * @param dMonth
+	 */
+	public void HttpGetMonthData(String date,final int dYear,final int dMonth){
+	    //获取数据对话框
+		dialogProgress = CustomProgress.show(SearchActivity.this, getString(R.string.getData), true, null);
+		
+		//声明volley队列，包装http请求
+		RequestQueue queue = Volley.newRequestQueue(this);
+		HashMap<String, String> params = new HashMap<String, String>();
+		
+		//判断是否选择自动登录
+		if(Setting.autoLogin){//如果是自动登录，则从缓存中取出数据
+			params.put("managerId", Integer.toString(shareUserInfo.getInt("uId", 0)));
+		}else{//如果没有选择，从Application中取出数据
+			params.put("managerId", Integer.toString(myApp.getUserId()));
+		}
+		
+		params.put("month", date);//
+		String url = Constants.localSEARCHREAORD;
+		url += StringUtils.encodeUrl(params);
+		
+		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+				new Response.Listener<JSONObject>(){
+
+					@Override
+					public void onResponse(JSONObject response) {
+						/**
+						 * 这里json解析
+						 */
+						JSONArray dayJsonArray = response.optJSONArray("month");
+						Type listType = new TypeToken<LinkedList<DayOfMonth>>(){}.getType(); 
+						Gson gson = new Gson(); 
+						LinkedList<DayOfMonth> listDay = gson.fromJson(dayJsonArray+"", listType);
+						list.clear();
+						for (Iterator iterator = listDay.iterator(); iterator.hasNext();) { 
+							DayOfMonth dayOfMonth = (DayOfMonth) iterator.next();
+							list.add(dayOfMonth);
+						}
+						  
+				        if(list.size()>0){
+				        	calV = new CalendarAdapter(SearchActivity.this,getResources(),dYear,dMonth,1,list); 
+                			dayOfWeek = sc.getWeekdayOfMonth(dYear, dMonth);      //某月第一天为星期几
+                			calV.notifyDataSetChanged();
+                			gridView.setAdapter(calV);
+				        }
+
+						dialogProgress.dismiss();
+						
+					}
+
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Toast.makeText(getApplicationContext(),
+								VolleyErrorHelper.handleServerError(error, getApplication()), Toast.LENGTH_SHORT)
+								.show();
+					}
+				});
+		queue.add(jsObjectRequest);
 	}
 
 }

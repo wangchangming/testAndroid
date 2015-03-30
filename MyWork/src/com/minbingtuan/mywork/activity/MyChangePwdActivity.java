@@ -12,11 +12,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
+import com.minbingtuan.mywork.utils.LogHelper;
+import com.minbingtuan.mywork.utils.Setting;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -39,12 +42,18 @@ public class MyChangePwdActivity extends Activity implements OnClickListener {
 	private String newPassWord;
 	private String confirmPassWord;
 
+	SharedPreferences shared;
+	
+	private MyApplication myApp;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_changepassword);
-
+		
+		shared = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
+		myApp = (MyApplication) getApplication();
+		
 		mOldPassword = (EditText) findViewById(R.id.EditTextOldPwd);
 		mNewPassWord = (EditText) findViewById(R.id.EditTextNewPwd);
 		mConfirmNewPassWord = (EditText) findViewById(R.id.EditTextConfirmNewPwd);
@@ -72,9 +81,17 @@ public class MyChangePwdActivity extends Activity implements OnClickListener {
 	}
 
 	public void changePassWord() {
-		MyApplication mApp = (MyApplication) getApplication();
-		String id = Integer.toString(mApp.getUserId());
-		String oldPwd = mApp.getUserPassWord();
+		String mobile = "";
+		String oldPwd = "";
+		
+		//获取用户ID
+		if(Setting.autoLogin){//来自缓存
+			mobile = shared.getString("uMobile", "");
+			oldPwd = shared.getString("uPwd", "");
+		}else{//来自application
+			mobile = myApp.getUserMobile();
+			oldPwd = myApp.getUserPassWord();
+		}
 		oldPassWord = mOldPassword.getText().toString().trim();
 		newPassWord = mNewPassWord.getText().toString().trim();
 		confirmPassWord = mConfirmNewPassWord.getText().toString().trim();
@@ -110,7 +127,7 @@ public class MyChangePwdActivity extends Activity implements OnClickListener {
 		RequestQueue queue = Volley.newRequestQueue(this);
 		final HashMap<String, String> params = new HashMap<String, String>();
 		params.put("pwd", newPassWord);
-		params.put("id", id);
+		params.put("mobile", mobile);
 
 		String url = MyApplication.localSETTINGPWD;
 		url += StringUtils.encodeUrl(params);
@@ -120,7 +137,6 @@ public class MyChangePwdActivity extends Activity implements OnClickListener {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
 						int status = response.optInt("status");
 						if (status == 0) {
 							Toast.makeText(getApplicationContext(), getString(R.string.ChangePassWord_successful),

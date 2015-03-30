@@ -2,6 +2,8 @@ package com.minbingtuan.mywork.activity;
 
 import java.util.HashMap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.Request;
@@ -14,6 +16,7 @@ import com.google.gson.Gson;
 import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
+import com.minbingtuan.mywork.model.DayOfMonth;
 import com.minbingtuan.mywork.service.MyAMapGpsService;
 import com.minbingtuan.mywork.utils.DateUtils;
 import com.minbingtuan.mywork.utils.LogHelper;
@@ -199,12 +202,12 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 							if (type == 1) {
 								buttonWorkOn.setClickable(false);
 								buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
-								amDate.setText(DateUtils.getSystemDate());
+								amDate.setText(DateUtils.getTime());
 							}
 							if (type == 2) {
 								buttonWorkOff.setClickable(false);
 								buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
-								pmDate.setText(DateUtils.getSystemDate());
+								pmDate.setText(DateUtils.getTime());
 							}
 							edit.commit();
 						}
@@ -314,36 +317,33 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 			params.put("managerId", Integer.toString(myApp.getUserId()));
 		}
 		
-		params.put("today", DateUtils.getDate());
+		params.put("day", DateUtils.getDate());
 		String url = Constants.localSEARCHREAORD;
 		url += StringUtils.encodeUrl(params);
 
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-				new Response.Listener<JSONObject>() {
+				new Response.Listener<JSONObject>(){
 
 					@Override
 					public void onResponse(JSONObject response) {
 						
 						/**
-						 * 这里需要获取一个签到信息的时间
-						 * 设置amDate、pmDate的时间显示
+						 * 这里json解析
 						 */
-						String xx = "{\"success\":true,\"type1\":-1,\"amTiem\":\"08:57\",\"type2\":-1,\"pmTime\":\"18:01\"}";
-						/**
-						 * 希望获得的json字符串
-						 * 原来的->{"success":true,"type1":-1,"type2":-1}
-						 * {"success":true,"type1":-1,"amTiem":"08:57","type2":-1,"pmTime":"18:01"}
-						 */
+						JSONObject day = response.optJSONObject("day");
+						LogHelper.trace(day+"");
+						Gson gson = new Gson();
+						DayOfMonth timeOfDay = gson.fromJson(day.toString(), DayOfMonth.class); 
 						
-						int type1 = response.optInt("type1");
-						int type2 = response.optInt("type2");
-						if (type1 == 0) {
+						if (!TextUtils.isEmpty(timeOfDay.getAm())) {
 							buttonWorkOn.setClickable(false);
 							buttonWorkOn.setImageResource(R.drawable.buttonqiandao);
+							amDate.setText(timeOfDay.getAm());
 						}
-						if (type2 == 0) {
+						if (!TextUtils.isEmpty(timeOfDay.getPm())) {
 							buttonWorkOff.setClickable(false);
 							buttonWorkOff.setImageResource(R.drawable.buttonqiandao);
+							pmDate.setText(timeOfDay.getPm());
 						}
 						dialogProgress.dismiss();
 					}

@@ -69,11 +69,10 @@ public class BackPwdActivity extends Activity implements OnClickListener{
 					if(t != null && t.getTimeout()>0){//判断验证码是否失效
 						if(mobile_code.equals(smscode.getText().toString())&&"2".equals(return_code)){
 							//跳转到修改密码界面
-							startActivity(new Intent(this,SetPwdActivity.class));
-							//清空编辑框
-							phone.setText("");
-							smscode.setText("");
-							mobile_code = "";
+							Intent intent = new Intent(this,SetPwdActivity.class);
+							intent.putExtra("phone", phone.getText().toString());
+							startActivity(intent);
+							finish();
 							
 						}else{
 							LogHelper.toast(this, getString(R.string.erroe_smscoe));

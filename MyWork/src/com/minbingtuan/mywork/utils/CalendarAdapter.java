@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -61,6 +62,7 @@ public class CalendarAdapter extends BaseAdapter {
 	private String sys_day = "";
 	private List<DayOfMonth> list;
 	private DayOfMonth day;
+	private int isSelected = 35;
 	
 	public CalendarAdapter(){
 		Date date = new Date();
@@ -144,6 +146,10 @@ public class CalendarAdapter extends BaseAdapter {
 		getCalendar(Integer.parseInt(currentYear),Integer.parseInt(currentMonth));
 		
 	}
+	public void isSelected(int selected){
+		isSelected = selected;
+		notifyDataSetChanged();
+	}
 	
 	@Override
 	public int getCount() {
@@ -195,8 +201,8 @@ public class CalendarAdapter extends BaseAdapter {
 			
 			//现在考虑空串的情况
 			//上午
-			if(!"".equals(day.getAmDate())){//如果字符串不为空
-				if(day.getAmDate().compareTo("09:00")>0){//如果时间晚于9点
+			if(!TextUtils.isEmpty(day.getAm())){//如果字符串不为空
+				if(day.getAm().compareTo("09:00")>0){//如果时间晚于9点
 					am.setBackgroundResource(R.drawable.mark2);
 				}else{
 					am.setBackgroundResource(R.drawable.mark1);
@@ -205,8 +211,8 @@ public class CalendarAdapter extends BaseAdapter {
 			}
 			
 			//下午
-			if(!"".equals(day.getPmDate())){//如果下午签到时间不为空
-				if(day.getPmDate().compareTo("18:00")>=0){//如果时间晚于18点
+			if(!TextUtils.isEmpty(day.getPm())){//如果下午签到时间不为空
+				if(day.getPm().compareTo("18:00")>=0){//如果时间晚于18点
 					pm.setBackgroundResource(R.drawable.mark4);
 				}else{
 					pm.setBackgroundResource(R.drawable.mark3);
@@ -236,6 +242,12 @@ public class CalendarAdapter extends BaseAdapter {
 			LogHelper.trace(position+"");
 			drawable = res.getDrawable(R.drawable.current_day_bgc);
 			textView.setTextColor(Color.RED);
+		}
+		//如果某一个item被点击
+		if(isSelected == position){
+			rt.setBackgroundColor(Color.YELLOW);
+		}else{
+			rt.setBackgroundColor(Color.WHITE);
 		}
 		
 		
