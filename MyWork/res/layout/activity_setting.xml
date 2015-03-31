@@ -85,7 +85,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
-                    android:text="@string/DefaultName" />
+                    android:text="@string/DefaultName"
+                    android:background="@drawable/userinfo_click_bg" />
 
                 <TextView
                     android:id="@+id/TextView01"
@@ -124,7 +125,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
-                    android:text="@string/DefaultGroup" />
+                    android:text="@string/DefaultGroup"
+                    android:textColor="#CACACA" />
 
                 <TextView
                     android:id="@+id/TextView02"
@@ -174,7 +176,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
-                    android:text="@string/DefaultTel" />
+                    android:text="@string/DefaultTel"
+                    android:background="@drawable/userinfo_click_bg" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -214,7 +217,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
-                    android:text="@string/DefaultIDNumber" />
+                    android:text="@string/DefaultIDNumber"
+                    android:background="@drawable/userinfo_click_bg" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -254,7 +258,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
-                    android:text="@string/DefaultEmail" />
+                    android:text="@string/DefaultEmail"
+                    android:background="@drawable/userinfo_click_bg" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -265,7 +270,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/RelativeLayout06"
                 android:layout_marginTop="10dp"
-                android:background="@color/white" >
+                android:background="@drawable/userinfo_click_bg" >
 
                 <RelativeLayout
                     android:id="@+id/RelativeLayoutAboutUs"
@@ -304,7 +309,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/RelativeLayout07"
-                android:background="@color/white" >
+                android:background="@drawable/userinfo_click_bg" >
 
                 <RelativeLayout
                     android:id="@+id/RelativeLayoutResetPassWord"

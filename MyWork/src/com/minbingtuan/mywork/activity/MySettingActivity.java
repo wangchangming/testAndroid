@@ -123,6 +123,7 @@ public class MySettingActivity extends Activity implements OnClickListener, OnTo
 		mName.setOnClickListener(this);
 		mPhone.setOnClickListener(this);
 		mBirthday.setOnTouchListener(this);
+		mBirthday.setOnClickListener(this);
 		mEmail.setOnClickListener(this);
 		mUserImage.setOnClickListener(this);
 		mPassWord.setOnClickListener(this);

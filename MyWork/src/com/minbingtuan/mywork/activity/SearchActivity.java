@@ -141,8 +141,6 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 		myApp = (MyApplication) getApplication();
         shareUserInfo = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);
         
-        //获取每月签到数据
-        HttpGetMonthData(DateUtils.getMonth()+"-",year_c,month_c);
         
 		
 		list = new ArrayList<DayOfMonth>();
@@ -165,11 +163,6 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
           
         gestureDetector = new GestureDetector(this);
 		dayOfWeek = sc.getWeekdayOfMonth(year_c, month_c);      //某月第一天为星期几
-        
-        //初始化界面
-		init();
-
-        addGridView();  
 		
 	}
 	@Override
@@ -179,6 +172,12 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
         if (!myApp.isConnect()) {// 如果没有连接网络
             Dialog dialog = new NetDialog(this, R.style.MyDialog);
             dialog.show();
+        }else{
+            //获取每月签到数据
+            HttpGetMonthData(DateUtils.getMonth()+"-",year_c,month_c);
+            //初始化界面
+    		init();
+            addGridView();  
         }
 		
 	}
@@ -442,6 +441,7 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						dialogProgress.dismiss();
 						Toast.makeText(getApplicationContext(),
 								VolleyErrorHelper.handleServerError(error, getApplication()), Toast.LENGTH_SHORT)
 								.show();

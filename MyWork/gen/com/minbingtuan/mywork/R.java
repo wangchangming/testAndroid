@@ -110,11 +110,12 @@ public final class R {
         public static final int spinner_9=0x7f02002f;
         public static final int text_color_bg=0x7f020030;
         public static final int uesrinfotouxiang=0x7f020031;
-        public static final int userinformation_head=0x7f020032;
-        public static final int viewblack=0x7f020033;
-        public static final int wheel_bg=0x7f020034;
-        public static final int wheel_val=0x7f020035;
-        public static final int workbutton=0x7f020036;
+        public static final int userinfo_click_bg=0x7f020032;
+        public static final int userinformation_head=0x7f020033;
+        public static final int viewblack=0x7f020034;
+        public static final int wheel_bg=0x7f020035;
+        public static final int wheel_val=0x7f020036;
+        public static final int workbutton=0x7f020037;
     }
     public static final class id {
         public static final int Arrow1=0x7f0a0065;
