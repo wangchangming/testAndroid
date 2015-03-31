@@ -30,7 +30,7 @@ public class AboutOurActivity extends Activity implements OnClickListener {
 	public static int WIDTH;
 	//屏幕的高度
 	public static int HEIGHT;
-	// 图片宽度的一般
+	// 图片宽度
 	private static  int IMAGE_HALFWIDTH ;
 	// 需要插图图片的大小 这里设定为150*150
 	int[] mPixels = new int[2 * IMAGE_HALFWIDTH * 2 * IMAGE_HALFWIDTH];

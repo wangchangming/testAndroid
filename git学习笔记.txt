@@ -1,0 +1,7 @@
+1、强制回滚到上一个版本： git reset --head HEAD~1
+
+2、本地覆盖服务器文件：git push -f origin master   强制提交
+
+3、查看历史版本：git log
+
+4、回滚至某一版本：git reset --head 版本号
