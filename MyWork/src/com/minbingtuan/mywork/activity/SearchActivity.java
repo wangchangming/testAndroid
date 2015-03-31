@@ -274,7 +274,7 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 		            //设置点击窗口外边窗口消失 
 		            popWindow.setOutsideTouchable(true); 
 		            if(popWindow.isShowing()){
-		            	calV.isSelected(35);
+		            	calV.isSelected(42);
 		            }else{
 						calV.isSelected(position);
 		            }

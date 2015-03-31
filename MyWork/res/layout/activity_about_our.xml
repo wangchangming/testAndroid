@@ -2,26 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:gravity="center_horizontal" >
     
     <TextView 
         android:id="@+id/re"
         android:layout_height="60dp"
         android:layout_width="match_parent"
-        android:background="@color/loginbackground1"
+        android:background="@drawable/text_color_bg"
         android:gravity="center_vertical"
         android:text="@string/Return"
         android:drawableLeft="@drawable/jiantouzuoone"
         android:onClick="onClick"
         android:textColor="@color/white"
         android:textSize="22sp" />
-    <TextView 
-        android:id="@+id/txt"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
+    <ImageView 
+        android:id="@+id/img"
+        android:paddingTop="60dp"
+        android:paddingBottom="30dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:gravity="center"
-        android:text="@string/minbingtuan"
-        android:textSize="22sp"
-        android:textColor="@color/black"/>
+        android:src="@drawable/minbingtuan"/>
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_upload"/>
 
 </LinearLayout>

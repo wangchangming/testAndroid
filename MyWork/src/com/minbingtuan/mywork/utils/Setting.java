@@ -6,4 +6,9 @@ public class Setting {
 	public static boolean autoLogin = false;
 	//是否退出
 	public static boolean isExit = false;
+	
+	//屏幕的宽度
+	public static int WIDTH;
+	//屏幕的高度
+	public static int HEIGHT;
 }

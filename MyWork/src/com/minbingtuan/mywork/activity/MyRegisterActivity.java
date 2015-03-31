@@ -49,6 +49,7 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 	private String password;
 	private String confirmPassWord;
 	private String eMail;
+	private String group;
 
 	private MyApplication myApp;
 
@@ -106,9 +107,9 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 			tel = EditTextTel.getText().toString().trim();
 			password = EditTextPassWord.getText().toString().trim();
 			confirmPassWord = EditTextConfirmPassWord.getText().toString().trim();
-			eMail = EditTextemail.getText().toString().trim();
+			group = ButtonGroup.getText().toString().trim();
 			if (TextUtils.isEmpty(name) || (TextUtils.isEmpty(tel)) || (TextUtils.isEmpty(password))
-					|| (TextUtils.isEmpty(eMail))) {
+					|| (TextUtils.isEmpty(group))) {
 				Toast.makeText(getApplicationContext(), getString(R.string.input_register_info), Toast.LENGTH_SHORT)
 						.show();
 				return;
@@ -129,11 +130,11 @@ public class MyRegisterActivity extends Activity implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			if (!StringUtils.isEmail(eMail)) {
-				Toast.makeText(getApplicationContext(), getString(R.string.Email_format_error), Toast.LENGTH_SHORT)
-						.show();
-				return;
-			}
+//			if (!StringUtils.isEmail(eMail)) {
+//				Toast.makeText(getApplicationContext(), getString(R.string.Email_format_error), Toast.LENGTH_SHORT)
+//						.show();
+//				return;
+//			}
 			if (!myApp.isConnect()) {
 				Toast.makeText(getApplicationContext(), getString(R.string.NetError), Toast.LENGTH_SHORT).show();
 				return;

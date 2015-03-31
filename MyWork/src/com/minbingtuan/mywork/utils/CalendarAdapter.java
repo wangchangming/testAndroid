@@ -62,7 +62,7 @@ public class CalendarAdapter extends BaseAdapter {
 	private String sys_day = "";
 	private List<DayOfMonth> list;
 	private DayOfMonth day;
-	private int isSelected = 35;
+	private int isSelected = 42;
 	
 	public CalendarAdapter(){
 		Date date = new Date();

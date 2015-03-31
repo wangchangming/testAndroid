@@ -14,6 +14,8 @@ import org.dom4j.Element;
 import com.minbingtuan.httputil.StringUtil;
 import com.minbingtuan.mywork.Constants;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Environment;
 /**
  * 
@@ -92,4 +94,23 @@ public class Tools {
 		
 		return code;
 	}
+	
+	
+	/**
+	 *  缩放图片
+	 * @param icon
+	 * @param h
+	 * @return
+	 */
+	public static Bitmap  zoomBitmap(Bitmap icon,int h){
+		// 缩放图片
+		Matrix m = new Matrix();
+		float sx = (float) 2 * h / icon.getWidth();
+		float sy = (float) 2 * h / icon.getHeight();
+		m.setScale(sx, sy);
+		// 重新构造一个2h*2h的图片
+		return Bitmap.createBitmap(icon, 0, 0,icon.getWidth(), icon.getHeight(), m, false);
+	}
+	
+	
 }

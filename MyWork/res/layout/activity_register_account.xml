@@ -20,7 +20,8 @@
 	        android:hint="@string/username"
 	        android:singleLine="true"
 	        android:textColor="@color/buttonTextDefault"
-	        android:textColorHint="@color/buttonTextHint"/>
+	        android:textColorHint="@color/buttonTextHint"
+	        android:drawableLeft="@drawable/red_snowflake"/>
         <EditText 
 	        android:id="@+id/editTextuserpassword"
 	        android:layout_width="match_parent"
@@ -33,7 +34,8 @@
 	        android:hint="@string/EnterPassWordLengthShouldBe6to20"
 	        android:inputType="textPassword"
 	        android:textColor="@color/buttonTextDefault"
-	        android:textColorHint="@color/buttonTextHint"/>
+	        android:textColorHint="@color/buttonTextHint"
+	        android:drawableLeft="@drawable/red_snowflake"/>
         <EditText 
 	        android:id="@+id/editTextConfirmPassWord"
 	        android:layout_width="match_parent"
@@ -46,7 +48,8 @@
 	        android:hint="@string/confirmpassword"
 	        android:inputType="textPassword"
 	        android:textColor="@color/buttonTextDefault"
-	        android:textColorHint="@color/buttonTextHint"/>
+	        android:textColorHint="@color/buttonTextHint"
+	        android:drawableLeft="@drawable/red_snowflake"/>
         <TextView 
 	        android:id="@+id/ButtonGroup"
 	        android:layout_width="match_parent"
@@ -60,7 +63,8 @@
 	        android:textSize="18sp"
 	        android:hint="@string/group"
 	        android:textColor="@color/buttonTextDefault"
-	        android:textColorHint="@color/buttonTextHint"/>
+	        android:textColorHint="@color/buttonTextHint"
+	        android:drawableLeft="@drawable/red_snowflake"/>
         <EditText 
 	        android:id="@+id/editTextTel"
 	        android:layout_width="match_parent"
@@ -73,7 +77,8 @@
 	        android:hint="@string/phoneNumber"
 	        android:inputType="phone"
 	        android:textColor="@color/buttonTextDefault"
-	        android:textColorHint="@color/buttonTextHint"/>
+	        android:textColorHint="@color/buttonTextHint"
+	        android:drawableLeft="@drawable/red_snowflake"/>
         <EditText 
 	        android:id="@+id/editTextEmail"
 	        android:layout_width="match_parent"
