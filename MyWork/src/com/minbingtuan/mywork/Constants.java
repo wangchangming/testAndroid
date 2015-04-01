@@ -36,4 +36,8 @@ public class Constants {
 	
 	//短信接口请求网址
 	public static String SMSURL = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
+	//服务器下载app地址
+	public static final String apkUrl = "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk";
+	//安装包存在手机上的路径
+	public static final String savePath = "/sdcard/updatedemo/";
 }

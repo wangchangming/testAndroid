@@ -4,6 +4,8 @@ package com.minbingtuan.mywork;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.minbingtuan.mywork.utils.Setting;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;

@@ -22,6 +22,7 @@ import com.minbingtuan.mywork.utils.DateUtils;
 import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.Setting;
 import com.minbingtuan.mywork.utils.StringUtils;
+import com.minbingtuan.mywork.utils.Tools;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 import com.minbingtuan.mywork.view.CustomProgress;
 import com.minbingtuan.mywork.view.NetDialog;
@@ -29,11 +30,11 @@ import com.minbingtuan.mywork.view.NetDialog;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,9 +43,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -87,6 +86,13 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+//		Intent intent = new Intent();
+//        intent.setAction("android.intent.action.VIEW");
+//        Uri content_url = Uri.parse("http://fir.im/minbingtuan");
+//        intent.setData(content_url);
+//        startActivity(intent);
+        
 		// 判断手机是否连接网络
         if (!myApp.isConnect()) {// 如果没有连接网络
             Dialog dialog = new NetDialog(this, R.style.MyDialog);
@@ -98,6 +104,12 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	}
 
 	public void init(){
+		//获取当前app版本号
+		PackageInfo info = Tools.getVersion(this);
+		if(info != null){
+			String name = info.versionName;
+			LogHelper.toast(this, name);
+		}
         
         shared = getSharedPreferences("sign_message", Activity.MODE_PRIVATE);
         shareUserInfo = getSharedPreferences("userInfo", Activity.MODE_WORLD_WRITEABLE);

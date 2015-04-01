@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
+import com.minbingtuan.mywork.service.UpdateManager;
 import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.SDCardUtil;
 import com.minbingtuan.mywork.utils.StringUtils;
@@ -58,6 +59,8 @@ public class MyLoginActivity extends Activity implements OnClickListener {
     SharedPreferences shared;
 
     boolean isFirstLogin;
+    
+    private UpdateManager mUpdateManager;
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -67,6 +70,11 @@ public class MyLoginActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_userlogin);
 
         myApp = (MyApplication)getApplication();
+        
+        //这里来检测版本是否需要更新
+        mUpdateManager = new UpdateManager(this);
+        mUpdateManager.checkUpdateInfo();
+        
 
         // 判断手机是否连接网络
         if (!myApp.isConnect()) {// 如果没有连接网络

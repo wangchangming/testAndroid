@@ -11,4 +11,7 @@ public class Setting {
 	public static int WIDTH;
 	//屏幕的高度
 	public static int HEIGHT;
+	
+	
+	
 }

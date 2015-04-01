@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -115,9 +116,12 @@ public class AboutOurActivity extends Activity implements OnClickListener {
 	}
 	
 	public void getWH(){
-		WindowManager wm = this.getWindowManager();
-		WIDTH = wm.getDefaultDisplay().getWidth();
-		HEIGHT = wm.getDefaultDisplay().getHeight();
+		DisplayMetrics dm = new DisplayMetrics();
+		//获取屏幕信息
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		HEIGHT = dm.heightPixels;
+		WIDTH = dm.widthPixels;
+		
 		
 	}
 

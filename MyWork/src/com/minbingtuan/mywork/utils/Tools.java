@@ -14,6 +14,10 @@ import org.dom4j.Element;
 import com.minbingtuan.httputil.StringUtil;
 import com.minbingtuan.mywork.Constants;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Environment;
@@ -111,6 +115,23 @@ public class Tools {
 		// 重新构造一个2h*2h的图片
 		return Bitmap.createBitmap(icon, 0, 0,icon.getWidth(), icon.getHeight(), m, false);
 	}
+	
+	/**
+	 * 获取app当前版本信息
+	 * @param context
+	 * @return
+	 * @throws NameNotFoundException
+	 */
+	public static PackageInfo getVersion(Context context){
+		PackageInfo info = null;
+		PackageManager manager = context.getPackageManager();
+		try {
+			info = manager.getPackageInfo(context.getPackageName(), 0);
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return info;
+	} 
 	
 	
 }

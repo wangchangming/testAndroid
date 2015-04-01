@@ -71,6 +71,10 @@
     <string name="net_discon">网络连接不可用，是否进行设置？</string>
     <string name="is_me">用户名错误，不可以替别人签到！</string>
     <string name="scan_upload">扫描立即下载</string>
+    <string name="updateMsg">有最新的软件包哦，亲快下载吧~</string>
+    <string name="update_version">软件版本更新</string>
+    <string name="upload_app">下载</string>
+    <string name="after_say">以后再说</string>
 
     <!-- 退出 -->
     <string name="Sure_you_want_to_quit">确定要退出吗?</string>
