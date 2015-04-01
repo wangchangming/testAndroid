@@ -14,16 +14,21 @@ import com.android.volley.toolbox.Volley;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.service.UpdateManager;
+import com.minbingtuan.mywork.service.UploadService;
 import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.SDCardUtil;
 import com.minbingtuan.mywork.utils.StringUtils;
+import com.minbingtuan.mywork.utils.Tools;
 import com.minbingtuan.mywork.utils.VolleyErrorHelper;
 import com.minbingtuan.mywork.view.CustomProgress;
 import com.minbingtuan.mywork.view.NetDialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -61,6 +66,16 @@ public class MyLoginActivity extends Activity implements OnClickListener {
     boolean isFirstLogin;
     
     private UpdateManager mUpdateManager;
+    
+    private BroadcastReceiver receiver = new BroadcastReceiver(){
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction()== "com.minbingtuan.mywork.uploadApp"){
+                LogHelper.trace("广播处理....");
+                Tools.installApk(context);
+            }
+        }};
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -70,10 +85,13 @@ public class MyLoginActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_userlogin);
 
         myApp = (MyApplication)getApplication();
+        registerBroast(this);//注册广播
         
         //这里来检测版本是否需要更新
-        mUpdateManager = new UpdateManager(this);
-        mUpdateManager.checkUpdateInfo();
+//        mUpdateManager = new UpdateManager(this);
+//        mUpdateManager.checkUpdateInfo();
+        
+        this.startService(new Intent(this,UploadService.class));
         
 
         // 判断手机是否连接网络
@@ -95,6 +113,23 @@ public class MyLoginActivity extends Activity implements OnClickListener {
 
         // 这里判断用户是否首次登录，根据情况作出相应的处理
         init();
+    }
+
+    /**
+     * 注册广播
+     * @param context
+     */
+    private void registerBroast(Context context){
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.minbingtuan.mywork.uploadApp");
+        context.registerReceiver(receiver, filter);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        this.stopService(new Intent(this,UploadService.class));
+        super.onDestroy();
     }
 
     // 关于自动登录的问题
@@ -302,5 +337,8 @@ public class MyLoginActivity extends Activity implements OnClickListener {
                 break;
         }
     }
+    
+    
+    
 
 }

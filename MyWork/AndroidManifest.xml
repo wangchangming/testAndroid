@@ -98,6 +98,8 @@
                 </action>
             </intent-filter>
         </service>
+        <service 
+            android:name="com.minbingtuan.mywork.service.UploadService"/>
         <!-- meta-data需要写在application中 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

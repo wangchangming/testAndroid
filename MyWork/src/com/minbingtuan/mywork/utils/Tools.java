@@ -1,5 +1,6 @@
 package com.minbingtuan.mywork.utils;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -15,11 +16,13 @@ import com.minbingtuan.httputil.StringUtil;
 import com.minbingtuan.mywork.Constants;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Environment;
 /**
  * 
@@ -132,6 +135,24 @@ public class Tools {
 		}
 		return info;
 	} 
+	
+	/**
+     * 安装apk
+     * 
+     * @param url
+     */
+    public static void installApk(Context context) {
+        File apkfile = new File(Constants.saveFileName);
+        if (!apkfile.exists()) {
+            return;
+        }
+        LogHelper.trace("启动下载...");
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
+                "application/vnd.android.package-archive");
+        context.startActivity(i);
+
+    }
 	
 	
 }
