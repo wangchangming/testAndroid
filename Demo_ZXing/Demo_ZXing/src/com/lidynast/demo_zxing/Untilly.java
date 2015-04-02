@@ -20,24 +20,24 @@ import android.widget.Toast;
 
 
 /**
- * ¹¤¾ßÀà
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * @author LJC
  *
  */
 public class Untilly {
 	/**
-	 *  Ëõ·ÅÍ¼Æ¬
+	 *  ï¿½ï¿½ï¿½ï¿½Í¼Æ¬
 	 * @param icon
 	 * @param h
 	 * @return
 	 */
 	public static Bitmap  zoomBitmap(Bitmap icon,int h){
-		// Ëõ·ÅÍ¼Æ¬
+		// ï¿½ï¿½ï¿½ï¿½Í¼Æ¬
 		Matrix m = new Matrix();
 		float sx = (float) 2 * h / icon.getWidth();
 		float sy = (float) 2 * h / icon.getHeight();
 		m.setScale(sx, sy);
-		// ÖØÐÂ¹¹ÔìÒ»¸ö2h*2hµÄÍ¼Æ¬
+		// ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½Ò»ï¿½ï¿½2h*2hï¿½ï¿½Í¼Æ¬
 		return Bitmap.createBitmap(icon, 0, 0,icon.getWidth(), icon.getHeight(), m, false);
 	}
 	
@@ -85,31 +85,31 @@ public class Untilly {
 	
 	/**
 	 * 
-	 * @param data Êý¾Ý
-	 * @param path Â·¾¶
-	 * @param fileName ÎÄ¼þÃû
-	 * @return true³É¹¦ falseÊ§°Ü
+	 * @param data ï¿½ï¿½ï¿½
+	 * @param path Â·ï¿½ï¿½
+	 * @param fileName ï¿½Ä¼ï¿½ï¿½ï¿½
+	 * @return trueï¿½É¹ï¿½ falseÊ§ï¿½ï¿½
 	 */
 	public static boolean writeToSdcard(byte[]data,String path,String fileName)
 	{
 		FileOutputStream fos=null;
 		try {
-				//ÅÐ¶ÏÓÐÃ»ÓÐÎÄ¼þ¼Ð
+				//ï¿½Ð¶ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 				File filePath=new File(path);
 				if(!filePath.exists())
 				{
-					//´´½¨ÎÄ¼þ¼Ð
+					//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 					filePath.mkdirs();
 				}
 				
-				//ÅÐ¶ÏÓÐÃ»ÓÐÍ¬ÃûµÄÎÄ¼þ
+				//ï¿½Ð¶ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 				File file=new File(path+fileName);
-				//ÓÐµÄ»°£¬É¾³ý
+				//ï¿½ÐµÄ»ï¿½ï¿½ï¿½É¾ï¿½ï¿½
 				if (file.exists())
 				{
 					file.delete();
 				}
-				//Ð´ÎÄ¼þ
+				//Ð´ï¿½Ä¼ï¿½
 				fos=new FileOutputStream(file);
 				fos.write(data);
 				fos.flush();

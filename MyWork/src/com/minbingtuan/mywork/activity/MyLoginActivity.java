@@ -88,11 +88,10 @@ public class MyLoginActivity extends Activity implements OnClickListener {
         registerBroast(this);//注册广播
         
         //这里来检测版本是否需要更新
-//        mUpdateManager = new UpdateManager(this);
-//        mUpdateManager.checkUpdateInfo();
+        mUpdateManager = new UpdateManager(this);
+        mUpdateManager.checkUpdateInfo();
         
-        this.startService(new Intent(this,UploadService.class));
-        
+//        this.startService(new Intent(this,UploadService.class));
 
         // 判断手机是否连接网络
         if (!myApp.isConnect()) {// 如果没有连接网络
@@ -208,6 +207,8 @@ public class MyLoginActivity extends Activity implements OnClickListener {
                             myApp.setLoginStatus(true);
                             Editor edit = shared.edit();
                             edit.putString("uName", userName);
+                            
+                            SDCardUtil.saveFile(userName);
 
                             if (checkBox.isChecked()) {
                                 // 如果选择了自动登录，则把个人信息保存在本地
@@ -310,9 +311,14 @@ public class MyLoginActivity extends Activity implements OnClickListener {
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    //判断用户是否是手机当前手机绑定的用户
-                    String name = shared.getString("uName", "");
-                    if(!TextUtils.isEmpty(name)&&!name.equals(mUserName)){
+//                    //判断用户是否是手机当前手机绑定的用户
+//                    String name = shared.getString("uName", "");
+//                    if(!TextUtils.isEmpty(name)&&!name.equals(mUserName)){
+//                    	LogHelper.toast(this, getString(R.string.is_me));
+//                    	return;
+//                    }
+                    
+                    if(SDCardUtil.getFile()!=null&&!mUserName.equals(SDCardUtil.getFile())){
                     	LogHelper.toast(this, getString(R.string.is_me));
                     	return;
                     }
@@ -338,7 +344,4 @@ public class MyLoginActivity extends Activity implements OnClickListener {
         }
     }
     
-    
-    
-
 }

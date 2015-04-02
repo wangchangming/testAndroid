@@ -29,7 +29,7 @@ public class UpdateManager {
 	private Context mContext;
 
 	// 返回的安装包url
-	private String apkUrl = "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk";
+	private String apkUrl = "http://192.168.1.117/attendance_system/minbing.apk";
 
 	private Dialog noticeDialog;
 
@@ -63,6 +63,7 @@ public class UpdateManager {
 			case DOWN_OVER://下载完成，进行安装
 
 				installApk();
+				downloadDialog.dismiss();
 				break;
 			default:
 				break;

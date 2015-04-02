@@ -20,6 +20,7 @@ import com.minbingtuan.mywork.model.DayOfMonth;
 import com.minbingtuan.mywork.service.MyAMapGpsService;
 import com.minbingtuan.mywork.utils.DateUtils;
 import com.minbingtuan.mywork.utils.LogHelper;
+import com.minbingtuan.mywork.utils.SDCardUtil;
 import com.minbingtuan.mywork.utils.Setting;
 import com.minbingtuan.mywork.utils.StringUtils;
 import com.minbingtuan.mywork.utils.Tools;
@@ -86,13 +87,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-//		Intent intent = new Intent();
-//        intent.setAction("android.intent.action.VIEW");
-//        Uri content_url = Uri.parse("http://fir.im/minbingtuan");
-//        intent.setData(content_url);
-//        startActivity(intent);
-        
+
 		// 判断手机是否连接网络
         if (!myApp.isConnect()) {// 如果没有连接网络
             Dialog dialog = new NetDialog(this, R.style.MyDialog);
