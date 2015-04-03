@@ -57,6 +57,12 @@ public class Constants {
     public static String localSETTINGPWD = LOCALHOST + SETTING_PWD;
 
     public static String localSEARCHREAORD = LOCALHOST + SEARCHRECORD;
+    
+    //请求签到信息接口
+    public static String USERSIGNINFO = "http://www.minbingtuan.cn:8088/api/result.php?";
+    
+    //请求签到信息接口
+    public static String ISPHONE = "http://192.168.1.117/attendance_system/api/mobile.php?";
 
     // 短信接口请求网址
     public static String SMSURL = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";

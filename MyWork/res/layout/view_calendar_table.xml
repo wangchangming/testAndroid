@@ -124,7 +124,7 @@
 		        android:paddingLeft="15dp"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:text="迟到3次，早退5次"/>
+		        android:text="@string/detail_information"/>
         </RelativeLayout>
     </ScrollView>
     <RelativeLayout

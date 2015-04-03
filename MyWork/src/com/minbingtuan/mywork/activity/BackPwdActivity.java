@@ -1,5 +1,14 @@
 package com.minbingtuan.mywork.activity;
 
+import org.json.JSONObject;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.StringUtils;
@@ -7,7 +16,10 @@ import com.minbingtuan.mywork.utils.TimeOutTask;
 import com.minbingtuan.mywork.utils.Tools;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,8 +34,18 @@ public class BackPwdActivity extends Activity implements OnClickListener{
 	private Button getsmscode;
 	private String mobile_code;
 	private String return_code;
-	
+	private int test = 0;
 	private TimeOutTask t;
+	private BroadcastReceiver receiver = new BroadcastReceiver(){
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if("get_mobile".equals(intent.getAction())){
+				//处理广播
+				IsPhone(phone.getText().toString());
+			}
+		}};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,10 +59,16 @@ public class BackPwdActivity extends Activity implements OnClickListener{
 		getsmscode.setOnClickListener(this);
 		findViewById(R.id.returnbtn).setOnClickListener(this);
 		findViewById(R.id.nextbtn).setOnClickListener(this);
+		
+		//注册广播
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("get_mobile");
+		registerReceiver(receiver, filter);
 	}
 
 	@Override
 	protected void onDestroy() {
+		unregisterReceiver(receiver);
 		super.onDestroy();
 	}
 
@@ -52,9 +80,10 @@ public class BackPwdActivity extends Activity implements OnClickListener{
 			mobile_code = (int)((Math.random()*9+1)*100000)+"";
 			if(!TextUtils.isEmpty(phone.getText())){//判断电话号是否为空
 				if(StringUtils.isTel(phone.getText().toString())){//判断电话号码格式是否正确
-					new MyThread().start();
-					t = new TimeOutTask(BackPwdActivity.this, getsmscode, 60);
-					t.execute(1000);
+					//发送广播，判断手机号是否存在
+					Intent intent = new Intent();
+					intent.setAction("get_mobile");
+					sendBroadcast(intent);
 				}else{
 					LogHelper.toast(this, getString(R.string.format_phone));
 				}
@@ -73,7 +102,6 @@ public class BackPwdActivity extends Activity implements OnClickListener{
 							intent.putExtra("phone", phone.getText().toString());
 							startActivity(intent);
 							finish();
-							
 						}else{
 							LogHelper.toast(this, getString(R.string.erroe_smscoe));
 						}
@@ -104,6 +132,37 @@ public class BackPwdActivity extends Activity implements OnClickListener{
 			return_code = Tools.sendSms(phone.getText().toString(), mobile_code);
 		}
 		
+	}
+	
+	//发送http请求判断手机号是否存在
+	public void IsPhone(String phone){
+		RequestQueue queue = Volley.newRequestQueue(this);
+		
+		String url = Constants.ISPHONE + "mobile="+phone;
+		LogHelper.trace(url);
+		
+		JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, 
+			new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				JSONObject data = response.optJSONObject("data");
+				String str = data.optString("mobile").trim();
+				if(!"null".equals(str)){
+					new MyThread().start();
+					t = new TimeOutTask(BackPwdActivity.this, getsmscode, 60);
+					t.execute(1000);
+				}else{
+					LogHelper.toast(BackPwdActivity.this, getString(R.string.phone_is_null));
+				}
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				LogHelper.toast(BackPwdActivity.this, getString(R.string.net_null));
+			}
+		});
+		queue.add(request);
 	}
 
 }

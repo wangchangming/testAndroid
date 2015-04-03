@@ -75,6 +75,9 @@
     <string name="update_version">软件版本更新</string>
     <string name="upload_app">下载</string>
     <string name="after_say">以后再说</string>
+    <string name="detail_information">应勤天数：%1$d天；实勤天数%2$d天；迟到1-9分钟：%3$d次；迟到10-29分钟：%4$d次；迟到30-59分钟：%5$d次；早退：%6$d次</string>
+    <string name="phone_is_null">该手机号未注册，请重新输入！</string>
+    <string name="net_null">网络异常</string>
 
     <!-- 退出 -->
     <string name="Sure_you_want_to_quit">确定要退出吗?</string>

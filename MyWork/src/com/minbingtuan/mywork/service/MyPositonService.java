@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.minbingtuan.mywork.Constants;
 import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.utils.DateUtils;
@@ -96,7 +97,7 @@ public class MyPositonService extends Service {
 		params.put("inputLongitude", mLongitude);
 		params.put("inputLatitude", mLatitude);
 		params.put("inputPosition", mAddr);
-		String url = MyApplication.LocalTIMEUrl;
+		String url = Constants.LocalTIMEUrl;
 		url += StringUtils.encodeUrl(params);
 		JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
 				new Response.Listener<JSONObject>() {

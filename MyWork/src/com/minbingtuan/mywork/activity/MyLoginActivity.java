@@ -65,8 +65,6 @@ public class MyLoginActivity extends Activity implements OnClickListener {
 
     boolean isFirstLogin;
     
-    private UpdateManager mUpdateManager;
-    
     private BroadcastReceiver receiver = new BroadcastReceiver(){
 
         @Override
@@ -87,9 +85,6 @@ public class MyLoginActivity extends Activity implements OnClickListener {
         myApp = (MyApplication)getApplication();
         registerBroast(this);//注册广播
         
-        //这里来检测版本是否需要更新
-        mUpdateManager = new UpdateManager(this);
-        mUpdateManager.checkUpdateInfo();
         
 //        this.startService(new Intent(this,UploadService.class));
 

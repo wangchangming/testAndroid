@@ -118,6 +118,8 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 	SharedPreferences shareUserInfo;
 	ProgressDialog dialog;
 	private CustomProgress dialogProgress;
+	
+	private TextView detailText;
     
 	public SearchActivity() {  
 	
@@ -175,6 +177,7 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
         }else{
             //获取每月签到数据
             HttpGetMonthData(DateUtils.getMonth()+"-",year_c,month_c);
+            HttpGetSignData(DateUtils.getMonth());
             //初始化界面
     		init();
             addGridView();  
@@ -187,6 +190,7 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 		buttonSetting = (RadioButton) findViewById(R.id.buttonSetting);
 		mRadioGroup = (RadioGroup) findViewById(R.id.main_radio);
         curDate = (TextView) findViewById(R.id.curDate);
+        detailText = (TextView) findViewById(R.id.detailText);
         curDate.setText(DateUtils.getMonth());
         buttonWork.setOnClickListener(this);
         buttonSetting.setOnClickListener(this);
@@ -448,6 +452,61 @@ public class SearchActivity extends Activity implements OnGestureListener,OnClic
 					}
 				});
 		queue.add(jsObjectRequest);
+	}
+	
+	/**
+	 * 发送请求，获取签到详细信息
+	 * @param date
+	 */
+	public void HttpGetSignData(String date){
+		//创建请求队列，用volley框架实现
+		RequestQueue queue = Volley.newRequestQueue(this);
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		/**
+		 * 添加请求参数
+		 */
+		//判断是否选择自动登录
+		if(Setting.autoLogin){//如果是自动登录，则从缓存中取出数据
+			map.put("mid", Integer.toString(shareUserInfo.getInt("uId", 0)));
+		}else{//如果没有选择，从Application中取出数据
+			map.put("mid", Integer.toString(myApp.getUserId()));
+		}
+		map.put("ym", date);
+		
+		//使用接口网址
+		String url = Constants.USERSIGNINFO;
+		url += StringUtils.encodeUrl(map);
+		
+		//发送请求
+		JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, 
+				new Response.Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject response) {
+				JSONObject data = response.optJSONObject("data");
+				int day = data.optInt("day");
+				int cq_data_count = data.optInt("type1");
+				int late1_9 = data.optInt("type2");
+				int late10_29 = data.optInt("type3");
+				int late30_59 = data.optInt("type4");
+				int leave_count = data.optInt("type5");
+				String txt = SearchActivity.this.getString(R.string.detail_information);
+				String detail = String.format(txt, day,cq_data_count,late1_9,late10_29,late30_59,leave_count);
+				detailText.setText(detail);
+				LogHelper.trace(data.toString());
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				
+			}
+		});
+		//加入请求队列中
+		queue.add(request);
+		
 	}
 
 }

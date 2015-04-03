@@ -18,6 +18,7 @@ import com.minbingtuan.mywork.MyApplication;
 import com.minbingtuan.mywork.R;
 import com.minbingtuan.mywork.model.DayOfMonth;
 import com.minbingtuan.mywork.service.MyAMapGpsService;
+import com.minbingtuan.mywork.service.UpdateManager;
 import com.minbingtuan.mywork.utils.DateUtils;
 import com.minbingtuan.mywork.utils.LogHelper;
 import com.minbingtuan.mywork.utils.SDCardUtil;
@@ -73,6 +74,8 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 	SharedPreferences shareUserInfo;
 	private int userID;
 	private CustomProgress dialogProgress;
+    private UpdateManager mUpdateManager;
+    private boolean uploadApp = false;
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -104,6 +107,15 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 		if(info != null){
 			String name = info.versionName;
 			LogHelper.toast(this, name);
+		}
+		
+		//发送更新app的请求  参数 ：version
+		if(uploadApp){//如果返回true,直接去下载新的app
+	        //这里来检测版本是否需要更新
+	        mUpdateManager = new UpdateManager(this);
+	        mUpdateManager.checkUpdateInfo();
+		}else{
+			
 		}
         
         shared = getSharedPreferences("sign_message", Activity.MODE_PRIVATE);
@@ -284,7 +296,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 				return;
 			}
 			HttpGetRequestRegistration(1);
-			((MyApplication) getApplication()).startPositonService();
+			//((MyApplication) getApplication()).startPositonService();
 			SetGpsFerquency();
 			break;
 		case R.id.ButtonWorkOff:
@@ -299,7 +311,7 @@ public class MyWorkActivity extends Activity implements OnClickListener {
 //				return;
 //			}
 			HttpGetRequestRegistration(2);
-			((MyApplication) getApplication()).stopPositonService();
+			//((MyApplication) getApplication()).stopPositonService();
 			break;
 
 		default:
